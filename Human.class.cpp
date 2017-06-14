@@ -20,17 +20,12 @@ Human::Human( Human const &src ){
 }
 
 Human::Human( std::string n, int np ) : Player(n, np), make(false){
-	human = true;
 }
 
 Human::Human( int np ) : Player("unknow", np), make(false){
 }
 
 Human::~Human( void ){
-}
-
-void		Human::ft_machin_learning(){
-
 }
 
 void		Human::make_hitBox( void ){
@@ -65,7 +60,6 @@ t_pions		*Human::put_token( Game & game ){
 	std::list<Hit_box*>::iterator	it;
 	Hit_box			*tmp;
 
-	// std::cout << "put_token" << std::endl;
 	pions->player = this->player;
 	if (!this->make)
 		this->make_hitBox();

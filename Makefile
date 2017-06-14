@@ -6,7 +6,7 @@
 #    By: mmoumini <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/05/12 13:41:19 by mmoumini          #+#    #+#              #
-#    Updated: 2016/06/23 00:48:28 by mmoumini         ###   ########.fr        #
+#    Updated: 2017/06/14 07:24:30 by Phlegyas         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -14,9 +14,9 @@
 
 NAME = Gomoku
 
-CC = clang++
+CC = g++
 
-CFLAGS = -std=c++11 -O3 -march=native -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 
 C_LIB = (cd lib; make)
 
@@ -28,17 +28,13 @@ LIB_PATH = -L./lib -ljpeg -lfreetype -logg -lvorbis -lvorbisenc -lvorbisfile -lF
 
 INC = -I./include
 
-
-
 SRC	=	main.cpp						\
-		tools.cpp						\
 		Timer.cpp						\
 		Game.class.cpp					\
 		GameAI_virtualTest.class.cpp	\
 		Player.class.cpp				\
 		Human.class.cpp					\
 		AI.class.cpp					\
-		Node.cpp					\
 		Hit_box.class.cpp
 
 OBJ = $(SRC:.cpp=.o)
@@ -49,7 +45,7 @@ $(NAME): $(OBJ)
 		$(C_LIB)
 		$(CC) -o $(NAME) $(OBJ) $(LIB_PATH) $(CFLAGS) $(INC)
 
-%.o: %.cpp
+.%.o: %.cpp
 	$(CC) -o $@ -c $< $(INC) $(CFLAGS)
 
 clean:

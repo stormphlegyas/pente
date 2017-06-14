@@ -1,14 +1,14 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Game.class.cpp                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mmoumini <mmoumini@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/06/09 17:15:37 by mmoumini          #+#    #+#             */
-//   Updated: 2016/03/17 17:30:33 by mmoumini         ###   ########.fr       //
-/*                                                                            */
-/* ************************************************************************** */
+// ************************************************************************** //
+//                                                                            //
+//                                                        :::      ::::::::   //
+//   Game.class.cpp                                     :+:      :+:    :+:   //
+//                                                    +:+ +:+         +:+     //
+//   By: mmoumini <marvin@42.fr>                    +#+  +:+       +#+        //
+//                                                +#+#+#+#+#+   +#+           //
+//   Created: 2015/06/09 17:15:37 by mmoumini          #+#    #+#             //
+//   Updated: 2015/07/01 12:58:01 by mmoumini         ###   ########.fr       //
+//                                                                            //
+// ************************************************************************** //
 
 #include "Game.class.hpp"
 #include "Human.class.hpp"
@@ -19,17 +19,13 @@
 #define SQUARE_L 550
 #define SPACE 70
 
-Game::Game( int h, Node & n ): State(h, n){
-	turn = 0;
-	nwin = 5;
-	len = (int)(n.getMap()).size();
-	decal = len - 4;//len - 5 (ou 4)
-	tmpwin = false;
+Game::Game( void ){
+
 }
 
-// Game::Game( Game const &src ){
-// 	*this = src;
-// }
+Game::Game( Game const &src ){
+	*this = src;
+}
 
 Game::~Game( void ){
 }
@@ -46,7 +42,6 @@ void		Game::init( sf::RenderWindow *win ){
 	int				choice;
 
 //	this->tracer = 0;
-	srand(std::time(NULL));
 	this->time = new Timer;
 	this->app = win;
 	this->w = false;
@@ -61,8 +56,6 @@ void		Game::init( sf::RenderWindow *win ){
 	this->buffer2 = new sf::SoundBuffer;
 	this->buffer3 = new sf::SoundBuffer;
 	this->buffer4 = new sf::SoundBuffer;
-	if (!this->digi.loadFromFile("src/DS-DIGI.TTF"))
-	std::cout << "can't load <DS-DIGI.TTF>!" << std::endl;
 	if (!this->woodTex.loadFromFile("src/bois.jpg"))
 		std::cout << "can't load <bois.jpg>!" << std::endl;
 	if (!this->fond.loadFromFile("src/fond.jpg"))
@@ -80,9 +73,9 @@ void		Game::init( sf::RenderWindow *win ){
 	if (!this->music[1].openFromFile("src/Forest.ogg"))
 		std::cout << "can't load <Forest.ogg>!" << std::endl;
 	if (!this->buffer1->loadFromFile("src/Yooo.ogg"))
-		std::cout << "can't load <Yooo.ogg>!" << std::endl;
+		std::cout << "can't load <Yooo.ogg>!" << std::endl;	
 	if (!this->buffer2->loadFromFile("src/Woosh.ogg"))
-		std::cout << "can't load <Woosh.ogg>!" << std::endl;
+		std::cout << "can't load <Woosh.ogg>!" << std::endl;	
 	if (!this->buffer3->loadFromFile("src/ninja.ogg"))
 		std::cout << "can't load <ninja.ogg>!" << std::endl;
 	if (!this->buffer4->loadFromFile("src/breaker.ogg"))
@@ -103,11 +96,10 @@ void		Game::init( sf::RenderWindow *win ){
 	this->app->draw(text);
 	this->app->display();
 	this->time->Start();
-	sleep(3);
-//	while (this->time->GetTime_sec() < 3)
-//		this->check_event();
+	while (this->time->GetTime_sec() < 3)
+		this->check_event();
 	this->fond.setRepeated(true);
-	this->woodTex.setRepeated(true);
+	this->woodTex.setRepeated(true);	
 	this->app->clear(sf::Color::White);
 	choice = this->gameMenu();
 	if (choice == 0)
@@ -115,10 +107,7 @@ void		Game::init( sf::RenderWindow *win ){
 	else if (choice == 1)
 	{
 		p1 = new Human("mous", 1);
-		p2 = new AI(2, this);
-		// State.second.setMap_char_at_XY(len/2, len/2, 'O');
-//		add_token(len/2, len/2, 2);
-		State.second.setMap_char_at_XY(len/2, len/2, 'O');
+		p2 = new AI(2);
 	}
 	else
 	{
@@ -126,71 +115,45 @@ void		Game::init( sf::RenderWindow *win ){
 		p2 = new Human("mous", 2);
 	}
 	this->drawGrid();
-	this->drawToken();
 	this->app->display();
 	this->Play();
 }
 
 void			Game::Play( void ){
 
-	while(42){
-	while (this->w == false)
+	while (42)
 	{
 		if (this->advance == 0)
 		{
-			this->time->Reinitialize();
-			this->time->Start();
 			this->add_token(p1->put_token(*this));
-			// std::cout << "FUCKING NB W : " << this->State.second.nbTakenWhite << std::endl;
-			// std::cout << "FUCKING NB B : " << this->State.second.nbTakenBlack << std::endl;
-			 if ( this->w )
-			// {
-				p2->ft_machin_learning();
-/*				if ( p1->GetPlayerN() == 1 )
+			if ( this->w )
+			{	
+				if ( p1->GetPlayerN() == 1 )
 				{
 					p1->ChangePlayer();
 					p2->ChangePlayer();
 				}
 				this->w = false;
-			}*/
+			}
 		}
 		else
 			this->advance--;
-		if (this->advance == 0 && this->w == false)
+		if (this->advance == 0)
 		{
-			
-			this->time->Reinitialize();
-			this->time->Start();
 			this->add_token(p2->put_token(*this));
-			// std::cout << "FUCKING NB W : " << this->State.second.nbTakenWhite << std::endl;
-			// std::cout << "FUCKING NB B : " << this->State.second.nbTakenBlack << std::endl;
-			// cap1 = this->State.second.nbTakenWhite;
-			// cap2 = this->State.second.nbTakenBlack;
-			// std::cout << "FUCKING CAP1 : " << cap1 << std::endl;
-			// std::cout << "FUCKING CAP2 : " << cap2 << std::endl;
-/*			if ( this->w )
-			{
+			if ( this->w )
+			{	
 				if ( p2->GetPlayerN() == 1 )
 				{
 					p1->ChangePlayer();
 					p2->ChangePlayer();
 				}
-	//			this->w = false;
-			}*/
+				this->w = false;
+			}
 		}
-		else if(this->w == false)
+		else
 			this->advance--;
 	}
-	this->w = false;
-	State.second.setMap_char_at_XY(len/2, len/2, 'O');
-	this->drawGrid();
-	this->drawToken();
-	this->app->display();
-
-//	add_token(len/2, len/2, 2);
-	this->advance = 0;
-	}
-	std::cout << "QUIT " << std::endl;
 }
 
 void			Game::draw_choice( void ){
@@ -255,10 +218,10 @@ int			Game::gameMenu( void ){
 				continuer = false;
 			}
 		case sf::Event::MouseButtonPressed:
-			if (appevent.mouseButton.x >= ORIGIN_X
+			if (appevent.mouseButton.x >= ORIGIN_X 
 				&& appevent.mouseButton.x <= ORIGIN_X + SQUARE_L)
 			{
-				if (appevent.mouseButton.y >= SPACE
+				if (appevent.mouseButton.y >= SPACE 
 					&& appevent.mouseButton.y <= SPACE + SQUARE_H)
 				{
 					choice = 1;
@@ -281,9 +244,8 @@ int			Game::gameMenu( void ){
 void			Game::Winner( int p ){
 	sf::Text			text;
 	std::stringstream   stream;
-	// int					v;
+	int					v;
 
-	// std::cout << "win" << std::endl;
 	this->linebreak = false;
 	stream << "Player " << p << " Win! ";
 	if (this->breakstat && p != this->breakstat)
@@ -297,7 +259,6 @@ void			Game::Winner( int p ){
 	this->victory.play();
 	text.setFont(osaka);
 	text.setString(stream.str());
-	// std::cout << "winsalo!" << std::endl;
 
 	text.setCharacterSize(40);
 
@@ -307,34 +268,22 @@ void			Game::Winner( int p ){
     this->drawScore();
 
 	if (p == 1)
-		text.setColor(sf::Color::White);
-	else
 		text.setColor(sf::Color::Black);
+	else
+		text.setColor(sf::Color::White);
 	text.setPosition(0, 0);
 	app->draw(text);
 	app->display();
 	clear_all();
-	// v = this->time->GetTime_sec();
-	// std::cout << "win " << p << std::endl;
-		// std::cout << "winbouyaka" << std::endl;
-
-	sleep(3);
-	// while (this->time->GetTime_sec() - v < 3 )
-	// 	this->check_event();
-		// std::cout << "wintime" << std::endl;
-
+	v = this->time->GetTime_sec();
+	while (this->time->GetTime_sec() - v < 3 )
+		this->check_event();
 	this->app->clear(sf::Color::White);
-	// std::cout << "winc" << std::endl;
-
 	this->drawGrid();
-	// std::cout << "windr" << std::endl;
-
 	this->w = true;
 	this->c = 0;
 	this->cap1 = 0;
 	this->cap2 = 0;
-	// std::cout << "win " << p << std::endl;
-
 }
 
 void			Game::check_event( void ){
@@ -343,7 +292,6 @@ void			Game::check_event( void ){
 	sf::Keyboard	key;
 	bool			quit;
 
-	quit = false;
 	this->app->pollEvent(appevent);
 	switch ( appevent.type )
 	{
@@ -366,11 +314,11 @@ void			Game::check_event( void ){
 
 void			Game::DrawGame( void ){
 	sf::Text			text;
-	std::stringstream   stream;
+	std::stringstream   stream;	
 
 	stream << "Draw Game!!" << std::endl;
 	this->victory.play();
-	text.setFont(osaka);
+	text.setFont(osaka); 
 	text.setString(stream.str());
 
 	text.setCharacterSize(40);
@@ -391,117 +339,69 @@ bool			Game::checkEvryLineBreak( int x, int  y, int player){
 	if ( ((v = this->whoisHere(x - 1, y)) != player && v)
          && (this->whoisHere(x + 1, y) == player)
          && (this->whoisHere(x + 2, y) == 0) )
-{
 		this->linebreak = true;
-		// std::cout << "piece capturable : "<< x << ", "<< y << " & " << x + 1 << ", "<< y << std::endl;
-}
 	if ( ((v = this->whoisHere(x - 1, y - 1)) != player && v)
          && (this->whoisHere(x + 1, y + 1) == player)
          && (this->whoisHere(x + 2, y + 2) == 0) )
-{
 		this->linebreak = true;
-		// std::cout << "piece capturable : "<< x << ", "<< y << " & " << x + 1 << ", "<< y + 1 << std::endl;
-}
 	if ( ((v = this->whoisHere(x, y - 1)) != player && v)
          && (this->whoisHere(x, y + 1) == player)
          && (this->whoisHere(x, y + 2) == 0) )
-{
 		this->linebreak = true;
-		// std::cout << "piece capturable : "<< x << ", "<< y << " & " << x << ", "<< y + 1<< std::endl;
-}
 	if ( ((v = this->whoisHere(x + 1, y - 1)) != player && v)
          && (this->whoisHere(x - 1, y + 1) == player)
          && (this->whoisHere(x - 2, y + 2) == 0) )
-{
 		this->linebreak = true;
-		// std::cout << "piece capturable : "<< x << ", "<< y << " & " << x - 1<< ", "<< y + 1 << std::endl;
-}
 	if ( ((v = this->whoisHere(x + 1, y)) != player && v)
          && (this->whoisHere(x - 1, y) == player)
          && (this->whoisHere(x - 2, y) == 0) )
-{
 		this->linebreak = true;
-		// std::cout << "piece capturable : "<< x << ", "<< y << " & " << x - 1 << ", "<< y << std::endl;
-}
 	if ( ((v = this->whoisHere(x + 1, y + 1)) != player && v)
          && (this->whoisHere(x - 1, y - 1) == player)
          && (this->whoisHere(x - 2, y - 2) == 0) )
-{
 		this->linebreak = true;
-		// std::cout << "piece capturable : "<< x << ", "<< y << " & " << x - 1 << ", "<< y - 1  << std::endl;
-}
 	if ( ((v = this->whoisHere(x, y + 1)) != player && v)
          && (this->whoisHere(x, y - 1) == player)
          && (this->whoisHere(x, y - 2) == 0) )
-{
 		this->linebreak = true;
-		// std::cout << "piece capturable : "<< x << ", "<< y << " & " << x << ", "<< y - 1<< std::endl;
-}
 	if ( ((v = this->whoisHere(x - 1, y + 1)) != player && v)
          && (this->whoisHere(x + 1, y - 1) == player)
          && (this->whoisHere(x + 2, y - 2) == 0) )
-{
 		this->linebreak = true;
-		// std::cout << "piece capturable : "<< x << ", "<< y << " & " << x + 1<< ", "<< y - 1<< std::endl;
-}
 
 
 	if ( (this->whoisHere(x - 1, y) == 0 )
          && (this->whoisHere(x + 1, y) == player)
          && (( v = this->whoisHere(x + 2, y)) != player && v) )
-{
 		this->linebreak = true;
-		// std::cout << "piece capturable : "<< x << ", "<< y << " & " << x + 1 << ", "<< y << std::endl;
-}
 	if ( (this->whoisHere(x - 1, y - 1) == 0)
          && (this->whoisHere(x + 1, y + 1) == player)
          && (( v = this->whoisHere(x + 2, y + 2)) != player && v) )
-{
 		this->linebreak = true;
-		// std::cout << "piece capturable : "<< x << ", "<< y << " & " << x + 1 << ", "<< y + 1<< std::endl;
-}
 	if ( (this->whoisHere(x, y - 1) == 0)
          && (this->whoisHere(x, y + 1) == player)
          && ((v = this->whoisHere(x, y + 2)) != player && v) )
-{
 		this->linebreak = true;
-		// std::cout << "piece capturable : "<< x << ", "<< y << " & " << x << ", "<< y + 1<< std::endl;
-}
 	if ( (this->whoisHere(x + 1, y - 1) == 0)
          && (this->whoisHere(x - 1, y + 1) == player)
          && ( (v = this->whoisHere(x - 2, y + 2)) != player && v) )
-{
 		this->linebreak = true;
-		// std::cout << "piece capturable : "<< x << ", "<< y << " & " << x - 1<< ", "<< y + 1<< std::endl;
-}
 	if ( (this->whoisHere(x + 1, y) == 0)
          && (this->whoisHere(x - 1, y) == player)
          && (( v = this->whoisHere(x - 2, y)) != player && v) )
-{
 		this->linebreak = true;
-		// std::cout << "piece capturable : "<< x << ", "<< y << " & " << x - 1<< ", "<< y << std::endl;
-}
 	if ( (this->whoisHere(x + 1, y + 1) == 0)
          && (this->whoisHere(x - 1, y - 1) == player)
          && ((v = this->whoisHere(x - 2, y - 2)) != player && v) )
-{
 		this->linebreak = true;
-		// std::cout << "piece capturable : "<< x << ", "<< y << " & " << x - 1<< ", "<< y - 1<< std::endl;
-}
 	if ( (this->whoisHere(x, y + 1) == 0)
          && (this->whoisHere(x, y - 1) == player)
          && ((v = this->whoisHere(x, y - 2)) != player && v) )
-{
 		this->linebreak = true;
-		// std::cout << "piece capturable : "<< x << ", "<< y << " & " << x << ", "<< y - 1<< std::endl;
-}
 	if ( (this->whoisHere(x - 1, y + 1) == 0)
          && (this->whoisHere(x + 1, y - 1) == player)
          && ((v = this->whoisHere(x + 2, y - 2)) != player && v) )
-{
 		this->linebreak = true;
-		// std::cout << "piece capturable : "<< x << ", "<< y << " & " << x + 1<< ", "<< y - 1<< std::endl;
-}
 	return (false);
 }
 
@@ -571,14 +471,10 @@ bool			Game::vert( t_pions *token ){
 	int				v;
 
 	v = 0;
-
 	tx = token->x;
 	ty = token->y + 1;
-	// std::cout << "test1 =  x = " << tx << ", y =" << ty << std::endl;
-	// std::cout << "test1 = " << token->player << std::endl;
 	while ( whoisHere(tx, ty) == token->player )
 	{
-		// std::cout << "x = " << tx << ", y = " << ty << std::endl;
 		ty++;
 		v++;
 		if (v == 4)
@@ -588,10 +484,8 @@ bool			Game::vert( t_pions *token ){
 		}
 	}
 	ty = token->y - 1;
-	// std::cout << "test2 = " << std::endl;
 	while ( whoisHere(tx, ty) == token->player )
 	{
-		// std::cout << "x = " << tx << ", y = " << ty << std::endl;
 		ty--;
 		v++;
 		if (v == 4)
@@ -673,432 +567,27 @@ bool			Game::diag2( t_pions *token ){
 	return (false);
 }
 
-
-bool	Game::ft_is_finished_for(std::array<std::array<char, 19>, 19> map, char c){
-	int count = 0;
-	int p = 0;
-	for (int i = 0; i < len; ++i){ //verti
-		count = 0;
-		for (int j = 0; j < len; ++j){
-			if (map[j][i] == c){
-				count++;
-				if (count == nwin){
-					return (true);
-				}
-			}
-			else
-				count = 0;
-		}
-	}
-	count = 0;
-	for (int i = 0; i < len; ++i){ //hori
-		count = 0;
-		for (int j = 0; j < len; ++j){
-			if (map[i][j] == c){
-				count++;
-				if (count == nwin){
-					return (true);
-				}
-			}
-			else
-				count = 0;
-		}
-	}
-	count = 0;
-	for (int k = 0; k < decal; ++k){ 
-		count = 0;
-		for (int i = 0; i < len - k; ++i){ //start up left -> down right toward up right
-			if (map[i][i+k] == c){
-				count++;
-				if (count == nwin){
-					return (true);
-				}
-			}
-			else
-				count = 0;
-		}
-		count = 0;
-		p = 0;
-		for (int i = len - 1 - k; i >= 0; --i){
-			if (map[p][i] == c){
-				count++;
-				if (count == nwin){
-					return (true);
-				}
-			}
-			else
-				count = 0;
-			p++;
-		}
-		if (k == 0)
-			continue;
-		count = 0;
-		for (int i = 0; i < len - k; ++i){  //start up left -> down right toward down left
-			if (map[i+k][i] == c){
-				count++;
-				if (count == nwin){
-					return (true);
-				}
-			}
-			else
-				count = 0;
-		}
-		p = 0;
-		count = 0;
-		for (int i = len - 1; i >= k; --i){//start up right -> down left toward down right //PRETY SPACE
-			if (map[p+k][i] == c){
-				count++;
-				if (count == nwin){
-					return (true);
-				}
-			}
-			else
-				count = 0;
-			p++;
-		}
-	}
-	return (false);
-
-}
-
-int     Game::ft_check_is_catchable(Node & node){
-	// std::cout << "ft_check_is_catchable" << std::endl;
-  int x = node.x;
-  int y = node.y;
-  bool  isok;
-  char  c;
-  int   count;
-  std::array<std::array<char, 19>, 19> map = node.getMap();
-
-  // std::cout << "ft_check_is_catchable" << std::endl;
-  // std::cout << "x = " << x << "   y = " << y << std::endl;
-  count = 0;
-  isok = false;
-  c = map[y][x];
-  if (x > 2){
-    for (int i = 1; i < 4; ++i) //H to left
-    {
-      if (c == map[y][x-i]){
-        if (count == 2)
-          isok = true;
-        else
-          break;
-      }
-      else if (map[y][x-i] != 0 && c != map[y][x-i])
-        count++;
-    }
-    if (isok){
-    	// std::cout << "SLASH H1" << std::endl;
-      map[y][x-1] = 0;
-      map[y][x-2] = 0;
-      node.setMap(map);
-      if (map[y][x] == 'X')
-        node.nbTakenBlack += 2;
-      else        
-        node.nbTakenWhite += 2;
-      // std::cout << "CATCHABLE IN H 1" << std::endl;
-      return (1);
-    }
-  }
-  if (x < len - 3){
-    count = 0;
-    isok = false;
-    c = map[y][x];
-    for (int i = 1; i < 4; ++i)  //H to right
-    {
-      if (c == map[y][x+i]){
-        if (count == 2)
-          isok = true;
-        else
-          break;
-      }
-      else if (map[y][x+i] != 0 && c != map[y][x+i])
-        count++;
-    }
-    if (isok){
-    	// std::cout << "SLASH H2" << std::endl;
-      map[y][x+1] = 0;
-      map[y][x+2] = 0;
-      node.setMap(map);
-      if (map[y][x] == 'X')
-        node.nbTakenBlack += 2;
-      else        
-        node.nbTakenWhite += 2;
-      // std::cout << "CATCHABLE IN H 2" << std::endl;
-      return (1);
-    }
-  }
-  if (y > 2){
-    count = 0;
-    isok = false;
-    c = map[y][x];
-    for (int i = 1; i < 4; ++i)  //V to up
-    {
-      if (c == map[y-i][x]){
-        if (count == 2)
-          isok = true;
-        else
-          break;
-      }
-      else if (map[y-i][x] != 0 && c != map[y-i][x])
-        count++;
-    }
-    if (isok){
-    	// std::cout << "SLASH V1" << std::endl;
-      map[y-1][x] = 0;
-      map[y-2][x] = 0;
-      node.setMap(map);
-      if (map[y][x] == 'X')
-        node.nbTakenBlack += 2;
-      else        
-        node.nbTakenWhite += 2;
-      // std::cout << "CATCHABLE IN V 1" << std::endl;
-      return (1);
-    }
-
-  }
-  if (y < len - 3){
-    count = 0;
-    isok = false;
-    c = map[y][x];
-    for (int i = 1; i < 4; ++i)  //V to down
-    {
-      if (c == map[y+i][x]){
-        if (count == 2)
-          isok = true;
-        else
-          break;
-      }
-      else if (map[y+i][x] != 0 && c != map[y+i][x])
-        count++;
-    }
-    if (isok){
-    	// std::cout << "SLASH V2" << std::endl;
-      map[y+1][x] = 0;
-      map[y+2][x] = 0;
-      node.setMap(map);
-      if (map[y][x] == 'X')
-        node.nbTakenBlack += 2;
-      else        
-        node.nbTakenWhite += 2;
-      // std::cout << "CATCHABLE IN V 2" << std::endl;
-      return (1);
-    }
-  }
-  //DIIAGGG
-  if (x < len - 3 && y < len - 3){
-    count = 0;
-    isok = false;
-    c = map[y][x];
-    for (int i = 1; i < 4; ++i)  //D to down-right
-    {
-      if (c == map[y+i][x+i]){
-        if (count == 2)
-          isok = true;
-        else
-          break;
-      }
-      else if (map[y+i][x+i] != 0 && c != map[y+i][x+i])
-        count++;
-    }
-    if (isok){
-    	// std::cout << "SLASH D1" << std::endl;
-      map[y+1][x+1] = 0;
-      map[y+2][x+2] = 0;
-      node.setMap(map);
-      if (map[y][x] == 'X')
-        node.nbTakenBlack += 2;
-      else        
-        node.nbTakenWhite += 2;
-      return (1);
-    }
-  }
-  if (y > 2 && x > 2){
-    count = 0;
-    isok = false;
-    c = map[y][x];
-    for (int i = 1; i < 4; ++i)  //D to top-left
-    {
-      if (c == map[y-i][x-i]){
-        if (count == 2)
-          isok = true;
-        else
-          break;
-      }
-      else if (map[y-i][x-i] != 0 && c != map[y-i][x-i])
-        count++;
-    }
-    if (isok){
-    	// std::cout << "SLASH D2" << std::endl;
-      map[y-1][x-1] = 0;
-      map[y-2][x-2] = 0;
-      node.setMap(map);
-      if (map[y][x] == 'X')
-        node.nbTakenBlack += 2;
-      else        
-        node.nbTakenWhite += 2;
-      return (1);
-    }
-  }
-  if (x > 2 && y < len - 3){
-    count = 0;
-    isok = false;
-    c = map[y][x];
-    for (int i = 1; i < 4; ++i)  //D to down-left
-    {
-      if (c == map[y+i][x-i]){
-        if (count == 2)
-          isok = true;
-        else
-          break;
-      }
-      else if (map[y+i][x-i] != 0 && c != map[y+i][x-i])
-        count++;
-    }
-    if (isok){
-    	// std::cout << "SLASH D3" << std::endl;
-      map[y+1][x-1] = 0;
-      map[y+2][x-2] = 0;
-      node.setMap(map);
-      if (map[y][x] == 'X')
-        node.nbTakenBlack += 2;
-      else        
-        node.nbTakenWhite += 2;
-      return (1);
-    }
-  }
-  if (y > 2 && x < len - 3){
-    count = 0;
-    isok = false;
-    c = map[y][x];
-    for (int i = 1; i < 4; ++i)  //D to top-right
-    {
-      if (c == map[y-i][x+i]){
-        if (count == 2)
-          isok = true;
-        else
-          break;
-      }
-      else if (map[y-i][x+i] != 0 && c != map[y-i][x+i])
-        count++;
-    }
-    if (isok){
-    	// std::cout << "SLASH D4" << std::endl;
-      map[y-1][x+1] = 0;
-      map[y-2][x+2] = 0;
-      node.setMap(map);
-      if (map[y][x] == 'X')
-        node.nbTakenBlack += 2;
-      else        
-        node.nbTakenWhite += 2;
-      return (1);
-    }
-  }
-  return (0);
-}
-
-
-void 		Game::ft_display_map(std::array<std::array<char, 19>, 19> map){
-	char	c = 'A';
-
-	std::cout << "  1 2 3 4 5 6 7 8 910111213141516171819" << std::endl << c << ' ';
-	for (int i = 0; i < len; ++i){
-		for (int j = 0; j < len; ++j){
-			if (!map[i][j])
-				std::cout << ' ';
-			else
-				std::cout << map[i][j];
-			if (j < (len - 1))
-				std::cout << '|';
-		}
-		std::cout << std::endl;
-		if ((int)(c - 64) < len)
-			std::cout << " ---------------------------------------" << std::endl << ++c << ' ';
-	}
-	std::cout << std::endl;
-}
-
-bool 		Game::ft_check_if_win(std::array<std::array<char, 19>, 19> const map){
-	// ft_display_map(map);
-
-	if (ft_is_finished_for(map, 'O')){//optimizable{
-		// std::cout << "O WIN" << std::endl;
-		return (true);
-	}
-	if (ft_is_finished_for(map, 'X')){//optimizable
-		// std::cout << "X WIN" << std::endl;
-		return (true);
-	}
-	return (false);
-}
-
 bool			Game::isWin( t_pions *token ){
-	(void)token;
-	// std::cout << "ISWIN " << std::endl;
-	// ft_display_map(State.second.getMap());
-	// std::cout << "istmpwin === " << State.second.istmpwin <<std::endl;
-
-
-
-	
-	if (this->cap1 > 9 || this->cap2 > 9 ){
-		// std::cout << "TRUE 1" << std::endl;
+	if (this->cap1 > 9 || this->cap2 > 9 )
 		return (true);
-	}
-	if ( this->hori(token) ){
-		if (!p2->human && token->player == 1 && !State.second.istmpwin){
-			State.second.istmpwin = true;
-			// this->linebreak = false;
-		}
-		// std::cout << "TRUE 2" << std::endl;
+	if ( this->hori(token) )
 		return (true);
-	}
-	if ( this->vert(token) ){
-		if (!p2->human && token->player == 1 && !State.second.istmpwin){
-			State.second.istmpwin = true;
-			// this->linebreak = false;
-		}
-		// std::cout << "TRUE 3" << std::endl;
+	if ( this->vert(token) )
 		return (true);
-	}
-	if ( this->diag1(token) ){
-		if (!p2->human && token->player == 1 && !State.second.istmpwin){
-			State.second.istmpwin = true;
-			// this->linebreak = false;
-		}
-		// std::cout << "TRUE 4" << std::endl;
+	if ( this->diag1(token) )
 		return (true);
-	}
-	if ( this->diag2(token) ){
-		if (!p2->human && token->player == 1 && !State.second.istmpwin){
-			State.second.istmpwin = true;
-			// this->linebreak = false;
-		}
-		// std::cout << "TRUE 5" << std::endl;
+	if ( this->diag2(token) )
 		return (true);
-	}
-	if (ft_check_if_win(State.second.getMap())){
-		if (!p2->human && token->player == 1 && !State.second.istmpwin)
-			State.second.istmpwin = true;
-		// std::cout << "TRUE 6" << std::endl;
-		return(true);
-	}
-
-	// std::cout << "FALSE DEFAULT" <<std::endl;
 	return (false);
 }
 
-void			Game::remove_token( int x, int y )
-{
-	if (x < 19 && y < 19)
-		State.second.setMap_char_at_XY(x, y, 0);
-}
-/*	std::list<t_pions*>::iterator	it;
+void			Game::remove_token( int x, int y ){
+	std::list<t_pions*>::iterator	it;
 
 	for (it = pions.begin(); it != pions.end(); it++)
 	{
 		t_pions		*token;
-
+		
 		token = *it;
 		if (token->x == x && token->y == y)
 		{
@@ -1108,21 +597,7 @@ void			Game::remove_token( int x, int y )
 			return ;
 		}
 	}
-*/
-	// std::unordered_map<std::string,int>::iterator it;
-	// std::ostringstream os;
-
- //    os << x << " " << y;
- //    it = pions.find(os.str());
-
-//     if (it != fake.end())
-//     {
-// 			pions.erase(it);
-// //			delete *it;
-// 			this->clear_all_virtual();
-// 			return ;
-// 	}
-// }
+}
 
 bool			Game::CaptureB( t_pions * ntoken ){
 	int			v;
@@ -1131,78 +606,69 @@ bool			Game::CaptureB( t_pions * ntoken ){
 	this->save.x = ntoken->x;
 	this->save.y = ntoken->y;
 	this->save.player = ntoken->player;
-	if ( (this->whoisHere(ntoken->x + 1, ntoken->y) == 1)
-		 && (this->whoisHere(ntoken->x + 2, ntoken->y) == 1)
+	if ( (this->whoisHere(ntoken->x + 1, ntoken->y) == 1) 
+		 && (this->whoisHere(ntoken->x + 2, ntoken->y) == 1) 
 		 && (this->whoisHere(ntoken->x + 3, ntoken->y) == 2) )
 	{
 		this->remove_token(ntoken->x + 1, ntoken->y);
 		this->remove_token(ntoken->x + 2, ntoken->y);
 		this->c = this->c - 2;
-		// std::cout << "plop2" << std::endl;
-
 	}
-	if ( (this->whoisHere(ntoken->x - 1, ntoken->y) == 1)
-		 && (this->whoisHere(ntoken->x - 2, ntoken->y) == 1)
+	if ( (this->whoisHere(ntoken->x - 1, ntoken->y) == 1) 
+		 && (this->whoisHere(ntoken->x - 2, ntoken->y) == 1) 
 		 && (this->whoisHere(ntoken->x - 3, ntoken->y) == 2) )
 	{
 		this->remove_token(ntoken->x - 1, ntoken->y);
 		this->remove_token(ntoken->x - 2, ntoken->y);
 		this->c = this->c - 2;
-		// std::cout << "plop2" << std::endl;
 	}
-	if ( (this->whoisHere(ntoken->x, ntoken->y + 1) == 1)
-		 && (this->whoisHere(ntoken->x, ntoken->y + 2) == 1)
+	if ( (this->whoisHere(ntoken->x, ntoken->y + 1) == 1) 
+		 && (this->whoisHere(ntoken->x, ntoken->y + 2) == 1) 
 		 && (this->whoisHere(ntoken->x, ntoken->y + 3) == 2) )
 	{
 		this->remove_token(ntoken->x, ntoken->y + 1);
 		this->remove_token(ntoken->x, ntoken->y + 2);
 		this->c = this->c - 2;
-		// std::cout << "plop2" << std::endl;
 	}
-	if ( (this->whoisHere(ntoken->x, ntoken->y - 1) == 1)
-		 && (this->whoisHere(ntoken->x, ntoken->y - 2) == 1)
+	if ( (this->whoisHere(ntoken->x, ntoken->y - 1) == 1) 
+		 && (this->whoisHere(ntoken->x, ntoken->y - 2) == 1) 
 		 && (this->whoisHere(ntoken->x, ntoken->y - 3) == 2) )
 	{
 		this->remove_token(ntoken->x, ntoken->y - 1);
 		this->remove_token(ntoken->x, ntoken->y - 2);
 		this->c = this->c - 2;
-		// std::cout << "plop2" << std::endl;
 	}
-	if ( (this->whoisHere(ntoken->x + 1, ntoken->y + 1) == 1)
-		 && (this->whoisHere(ntoken->x + 2, ntoken->y + 2) == 1)
+	if ( (this->whoisHere(ntoken->x + 1, ntoken->y + 1) == 1) 
+		 && (this->whoisHere(ntoken->x + 2, ntoken->y + 2) == 1) 
 		 && (this->whoisHere(ntoken->x + 3, ntoken->y + 3) == 2) )
 	{
 		this->remove_token(ntoken->x + 1, ntoken->y + 1);
 		this->remove_token(ntoken->x + 2, ntoken->y + 2);
 		this->c = this->c - 2;
-		// std::cout << "plop2" << std::endl;
 	}
 	if ( (this->whoisHere(ntoken->x - 1, ntoken->y - 1) == 1)
-		 && (this->whoisHere(ntoken->x - 2, ntoken->y - 2) == 1)
+		 && (this->whoisHere(ntoken->x - 2, ntoken->y - 2) == 1) 
 		 && (this->whoisHere(ntoken->x - 3, ntoken->y - 3) == 2) )
 	{
 		this->remove_token(ntoken->x - 1, ntoken->y - 1);
 		this->remove_token(ntoken->x - 2, ntoken->y - 2);
 		this->c = this->c - 2;
-		// std::cout << "plop2" << std::endl;
 	}
 	if ( (this->whoisHere(ntoken->x + 1, ntoken->y - 1) == 1)
-		 && (this->whoisHere(ntoken->x + 2, ntoken->y - 2) == 1)
+		 && (this->whoisHere(ntoken->x + 2, ntoken->y - 2) == 1) 
 		 && (this->whoisHere(ntoken->x + 3, ntoken->y - 3) == 2) )
 	{
 		this->remove_token(ntoken->x + 1, ntoken->y - 1);
 		this->remove_token(ntoken->x + 2, ntoken->y - 2);
 		this->c = this->c - 2;
-		// std::cout << "plop2" << std::endl;
 	}
-	if ( (this->whoisHere(ntoken->x - 1, ntoken->y + 1) == 1)
-		 && (this->whoisHere(ntoken->x - 2, ntoken->y + 2) == 1)
+	if ( (this->whoisHere(ntoken->x - 1, ntoken->y + 1) == 1) 
+		 && (this->whoisHere(ntoken->x - 2, ntoken->y + 2) == 1) 
 		 && (this->whoisHere(ntoken->x - 3, ntoken->y + 3) == 2) )
 	{
 		this->remove_token(ntoken->x - 1, ntoken->y + 1);
 		this->remove_token(ntoken->x - 2, ntoken->y + 2);
 		this->c = this->c - 2;
-		// std::cout << "plop2" << std::endl;
 	}
 	if (v != this->c)
 	{
@@ -1218,38 +684,10 @@ bool			Game::CaptureB( t_pions * ntoken ){
         this->app->display();
         this->captur.play();
 		sf::sleep(sf::seconds(1));
-		// std::cout << "BEFORE ME:" << std::endl;
-		// std::cout << "nbTakenBlack == " << State.second.nbTakenBlack << std::endl;
-		// std::cout << "nbTakenWhite == " << State.second.nbTakenWhite << std::endl;
 		this->cap2 = this->cap2 + (v - this->c);
-		State.second.nbTakenWhite = cap2;
-		// std::cout << "AFTER ME:" << std::endl;
-		// std::cout << "nbTakenBlack == " << State.second.nbTakenBlack << std::endl;
-		// std::cout << "nbTakenWhite == " << State.second.nbTakenWhite << std::endl;
 		return (true);
 	}
 	return (false);
-}
-
-void 			Game::Slashme(){
-	sf::Text    text;
-
-	this->time->Pause();
-	text.setFont(osaka);
-	text.setString("Slash!!!");
-	text.setCharacterSize(40);
-	this->app->clear(sf::Color::White);
-	this->drawGrid();
-	this->drawToken();
-    this->app->draw(text);
-    this->app->display();
-    this->captur.play();
-	sf::sleep(sf::seconds(1));
-	// this->cap2 = this->cap2 + (v - this->c);
-	cap1 = State.second.nbTakenBlack;
-	cap2 = State.second.nbTakenWhite;
-	// std::cout << "slashme" << std::endl;
-	// ft_display_map(State.second.getMap());
 }
 
 bool			Game::CaptureW( t_pions * ntoken ){
@@ -1259,77 +697,69 @@ bool			Game::CaptureW( t_pions * ntoken ){
 	this->save.x = ntoken->x;
 	this->save.y = ntoken->y;
 	this->save.player = ntoken->player;
-	if ( (this->whoisHere(ntoken->x + 1, ntoken->y) == 2)
-		 && (this->whoisHere(ntoken->x + 2, ntoken->y) == 2)
+	if ( (this->whoisHere(ntoken->x + 1, ntoken->y) == 2) 
+		 && (this->whoisHere(ntoken->x + 2, ntoken->y) == 2) 
 		 && (this->whoisHere(ntoken->x + 3, ntoken->y) == 1) )
 	{
 		this->remove_token(ntoken->x + 1, ntoken->y);
 		this->remove_token(ntoken->x + 2, ntoken->y);
 		this->c = this->c - 2;
-		// std::cout << "plop 1" << std::endl;
 	}
-	if ( (this->whoisHere(ntoken->x - 1, ntoken->y) == 2)
-		 && (this->whoisHere(ntoken->x - 2, ntoken->y) == 2)
+	if ( (this->whoisHere(ntoken->x - 1, ntoken->y) == 2) 
+		 && (this->whoisHere(ntoken->x - 2, ntoken->y) == 2) 
 		 && (this->whoisHere(ntoken->x - 3, ntoken->y) == 1) )
 	{
 		this->remove_token(ntoken->x - 1, ntoken->y);
 		this->remove_token(ntoken->x - 2, ntoken->y);
 		this->c = this->c - 2;
-		// std::cout << "plop 1" << std::endl;
 	}
-	if ( (this->whoisHere(ntoken->x, ntoken->y + 1) == 2)
-		 && (this->whoisHere(ntoken->x, ntoken->y + 2) == 2)
+	if ( (this->whoisHere(ntoken->x, ntoken->y + 1) == 2) 
+		 && (this->whoisHere(ntoken->x, ntoken->y + 2) == 2) 
 		 && (this->whoisHere(ntoken->x, ntoken->y + 3) == 1) )
 	{
 		this->remove_token(ntoken->x, ntoken->y + 1);
 		this->remove_token(ntoken->x, ntoken->y + 2);
 		this->c = this->c - 2;
-		// std::cout << "plop 1" << std::endl;
 	}
-	if ( (this->whoisHere(ntoken->x, ntoken->y - 1) == 2)
-		 && (this->whoisHere(ntoken->x, ntoken->y - 2) == 2)
+	if ( (this->whoisHere(ntoken->x, ntoken->y - 1) == 2) 
+		 && (this->whoisHere(ntoken->x, ntoken->y - 2) == 2) 
 		 && (this->whoisHere(ntoken->x, ntoken->y - 3) == 1) )
 	{
 		this->remove_token(ntoken->x, ntoken->y - 1);
 		this->remove_token(ntoken->x, ntoken->y - 2);
 		this->c = this->c - 2;
-		// std::cout << "plop 1" << std::endl;
 	}
-	if ( (this->whoisHere(ntoken->x + 1, ntoken->y + 1) == 2)
-		 && (this->whoisHere(ntoken->x + 2, ntoken->y + 2) == 2)
+	if ( (this->whoisHere(ntoken->x + 1, ntoken->y + 1) == 2) 
+		 && (this->whoisHere(ntoken->x + 2, ntoken->y + 2) == 2) 
 		 && (this->whoisHere(ntoken->x + 3, ntoken->y + 3) == 1) )
 	{
 		this->remove_token(ntoken->x + 1, ntoken->y + 1);
 		this->remove_token(ntoken->x + 2, ntoken->y + 2);
 		this->c = this->c - 2;
-		// std::cout << "plop 1" << std::endl;
 	}
-	if ( (this->whoisHere(ntoken->x - 1, ntoken->y - 1) == 2)
-		 && (this->whoisHere(ntoken->x - 2, ntoken->y - 2) == 2)
+	if ( (this->whoisHere(ntoken->x - 1, ntoken->y - 1) == 2) 
+		 && (this->whoisHere(ntoken->x - 2, ntoken->y - 2) == 2) 
 		 && (this->whoisHere(ntoken->x - 3, ntoken->y - 3) == 1) )
 	{
 		this->remove_token(ntoken->x - 1, ntoken->y - 1);
 		this->remove_token(ntoken->x - 2, ntoken->y - 2);
 		this->c = this->c - 2;
-		// std::cout << "plop 1" << std::endl;
 	}
-	if ( (this->whoisHere(ntoken->x + 1, ntoken->y - 1) == 2)
-		 && (this->whoisHere(ntoken->x + 2, ntoken->y - 2) == 2)
+	if ( (this->whoisHere(ntoken->x + 1, ntoken->y - 1) == 2) 
+		 && (this->whoisHere(ntoken->x + 2, ntoken->y - 2) == 2) 
 		 && (this->whoisHere(ntoken->x + 3, ntoken->y - 3) == 1) )
 	{
 		this->remove_token(ntoken->x + 1, ntoken->y - 1);
 		this->remove_token(ntoken->x + 2, ntoken->y - 2);
 		this->c = this->c - 2;
-		// std::cout << "plop 1" << std::endl;
 	}
-	if ( (this->whoisHere(ntoken->x - 1, ntoken->y + 1) == 2)
-		 && (this->whoisHere(ntoken->x - 2, ntoken->y + 2) == 2)
+	if ( (this->whoisHere(ntoken->x - 1, ntoken->y + 1) == 2) 
+		 && (this->whoisHere(ntoken->x - 2, ntoken->y + 2) == 2) 
 		 && (this->whoisHere(ntoken->x - 3, ntoken->y + 3) == 1) )
 	{
 		this->remove_token(ntoken->x - 1, ntoken->y + 1);
 		this->remove_token(ntoken->x - 2, ntoken->y + 2);
 		this->c = this->c - 2;
-		// std::cout << "plop 1" << std::endl;
 	}
 	if (v != this->c)
 	{
@@ -1345,14 +775,7 @@ bool			Game::CaptureW( t_pions * ntoken ){
         this->app->display();
         this->captur.play();
 		sf::sleep(sf::seconds(1));
-		// std::cout << "BEFOR YOU:" << std::endl;
-		// std::cout << "nbTakenBlack == " << State.second.nbTakenBlack << std::endl;
-		// std::cout << "nbTakenWhite == " << State.second.nbTakenWhite << std::endl;
 		this->cap1 = this->cap1 + (v - this->c);
-		State.second.nbTakenBlack = cap1;
-		// std::cout << "AFTER YOU:" << std::endl;
-		// std::cout << "nbTakenBlack == " << State.second.nbTakenBlack << std::endl;
-		// std::cout << "nbTakenWhite == " << State.second.nbTakenWhite << std::endl;
 		return (true);
 	}
 	return (false);
@@ -1395,36 +818,18 @@ void			Game::unbreakable1( t_pions *token ){
 		this->Winner( token->player );
 		return ;
 	}
-	// std::cout << "this linebreak = " << linebreak << std::endl;
-	
-	if (this->linebreak == true || this->cap2 > 7)
+
+if (this->linebreak == true || this->cap2 > 7)
 	{
-		// t_pions		*ntoken = new t_pions;
-		std::stringstream		os;
+		t_pions		*ntoken = new t_pions;
 		this->drawBreakevent();
 		this->breakstat = 1;
 		this->breakcapture1();
 //		this->breakstat = 0;
-		os << this->save.x << " " << this->save.y;
-		if (save.player == 1)
-			State.second.setMap_char_at_XY(save.x, save.y, 'X');
-		if (save.player == 2)
-			State.second.setMap_char_at_XY(save.x, save.y, 'O');
-		if (ft_check_is_catchable(State.second)){
-			cap1 = State.second.nbTakenWhite;
-			cap2 = State.second.nbTakenBlack;
-		}
-		// std::cout << "CHECK" << std::endl;
-		// ft_display_map(State.second.getMap());
-		// std::cout << this->whoisHere(token->x, token->y) << std::endl;
-
-		if (this->whoisHere(token->x, token->y) == 0)
-		token->player = -1;
-		// pions[os.str()] = this->save.player;
-//		ntoken->x = this->save.x;
-//		ntoken->y = this->save.y;
-//		ntoken->player = this->save.player;
-//		this->pions.push_back(ntoken);
+		ntoken->x = this->save.x;
+		ntoken->y = this->save.y;
+		ntoken->player = this->save.player;
+		this->pions.push_back(ntoken);
 		this->clear_all_virtual();
 		this->app->clear(sf::Color::White);
 		this->drawGrid();
@@ -1434,6 +839,7 @@ void			Game::unbreakable1( t_pions *token ){
 		if (!isWin(token))
 			return ;
 	}
+
 	if (this->cap2 > 9)
 	{
 		this->app->clear(sf::Color::White);
@@ -1451,7 +857,7 @@ void			Game::unbreakable1( t_pions *token ){
 		this->drawScore();
 		this->Winner(1);
 	}
-
+	
 }
 
 void			Game::unbreakable2( t_pions * token ){
@@ -1461,37 +867,22 @@ void			Game::unbreakable2( t_pions * token ){
 		return ;
 	}
 
-	// this->drawBreakevent();
-	// this->breakstat = 2;
-	// this->breakcapture2();
-	
+//	this->drawBreakevent();
+//	this->breakstat = 2;
+//	this->breakcapture2();
+
+
 	if (this->linebreak == true || this->cap1 > 7)
 	{
-		// t_pions		*ntoken = new t_pions;
-		std::stringstream        os;
+		t_pions		*ntoken = new t_pions;
 		this->drawBreakevent();
 		this->breakstat = 2;
 		this->breakcapture2();
 //		this->breakstat = 0;
-//		ntoken->x = this->save.x;
-//		ntoken->y = this->save.y;
-//		ntoken->player = this->save.player;
-//		this->pions.push_back(ntoken);
-		os << this->save.x << " " << this->save.y;
-		if (save.player == 1)
-			State.second.setMap_char_at_XY(save.x, save.y, 'X');
-		if (save.player == 2)
-			State.second.setMap_char_at_XY(save.x, save.y, 'O');
-		if (ft_check_is_catchable(State.second)){
-			cap1 = State.second.nbTakenWhite;
-			cap2 = State.second.nbTakenBlack;
-		}
-	// 	std::cout << "CHECK" << std::endl;
-	// ft_display_map(State.second.getMap());
-	// std::cout << this->whoisHere(token->x, token->y) << std::endl;
-	if (this->whoisHere(token->x, token->y) == 0)
-		token->player = -1;
-		// pions[os.str()]= this->save.player;
+		ntoken->x = this->save.x;
+		ntoken->y = this->save.y;
+		ntoken->player = this->save.player;
+		this->pions.push_back(ntoken);
 		this->clear_all_virtual();
 		this->app->clear(sf::Color::White);
 		this->drawGrid();
@@ -1501,6 +892,8 @@ void			Game::unbreakable2( t_pions * token ){
 		if (!isWin(token))
 			return ;
 	}
+
+
 	if (this->cap1 > 9)
 	{
 		this->app->clear(sf::Color::White);
@@ -1522,56 +915,14 @@ void			Game::unbreakable2( t_pions * token ){
 
 void			Game::add_token( t_pions * token ){
 
-		// std::cout << "add_token" << std::endl;
 
-	this->time->Pause();
-	if (token->player == 1){
-		this->stm1.str("");
-	this->stm1 << std::setfill ('0') << std::setw (2);
-
-	this->stm1 << time->GetTime() << ":"; 
-	this->stm1 << std::setfill ('0') << std::setw (2); 
-	this->stm1 << time->GetTime_sec() << ":" ;
-	this->stm1 << std::setfill ('0') << std::setw (2);
-	this->stm1 << time->GetTime_milli();
-	// std::cout << "STM1 : " << stm1.str() << std::endl;
-	State.second.setMap_char_at_XY(token->x, token->y, 'X');
-
-	}
-	else if (token->player == 2){
-		this->stm2.str("");
-	this->stm2 << std::setfill ('0') << std::setw (2);
-	this->stm2 << time->GetTime() << ":"; 
-	this->stm2 << std::setfill ('0') << std::setw (2); 
-	this->stm2 << time->GetTime_sec() << ":" ;
-	this->stm2 << std::setfill ('0') << std::setw (2);
-	this->stm2 << time->GetTime_milli();
-	// std::cout << "STM2 : " << stm2.str() << std::endl;
-
-	State.second.setMap_char_at_XY(token->x, token->y, 'O');
-
-	}
-	this->time->Start();
-	if (ft_check_is_catchable(State.second)){
-			cap1 = State.second.nbTakenWhite;
-			cap2 = State.second.nbTakenBlack;
-	}
-	// this->clear_all_virtual();
-
-	// if (token->player == 1)
-	// 	this->CaptureW(token);
-	// else if (token->player == 2)
-	// 	this->CaptureB(token);
-	// if (ft_check_is_catchable(State.second)){
-	// 	// if (cap2 != State.second.nbTakenBlack){
-	// 		cap2 = State.second.nbTakenBlack;
-	// 		// EffectCaptureW();
-	// 	// }
-	// 	// else if (cap1 != State.second.nbTakenWhite){
-	// 		cap1 = State.second.nbTakenWhite;
-	// 		EffectCaptureB();
-	// 	// }
-	// }
+	this->c++;
+	this->pions.push_back(token);
+	this->clear_all_virtual();
+	if (token->player == 1)
+		this->CaptureW(token);
+	else if (token->player == 2)
+		this->CaptureB(token);
 
 	this->app->clear(sf::Color::White);
 	this->drawGrid();
@@ -1579,22 +930,15 @@ void			Game::add_token( t_pions * token ){
 	this->drawScore();
 	if (isWin(token))
 	{
-		// std::cout << "ENTER1" << std::endl;
-		// std::cout << "linebreak = " << linebreak << std::endl;
-		if (token->player == 1){
-			// std::cout << "11111111 " << std::endl;
+		if (token->player == 1)
 			this->unbreakable1(token);
-		}
-		if (token->player == 2){
-			// std::cout << "22222222 " << std::endl;
+		if (token->player == 2)
 			this->unbreakable2(token);
-		}
 	}
 	if ( this->c >= 360 )
 		this->DrawGame();
 	this->app->display();
 }
-
 
 void			Game::add_token( int x, int y, int player ){
 
@@ -1602,102 +946,23 @@ void			Game::add_token( int x, int y, int player ){
 	ntoken->x = x;
 	ntoken->y = y;
 	ntoken->player = player;
-// 	std::stringstream 	os;
-// 	this->c++;
-// 	os << x << " " << y;
-//     pions[os.str()] = player;
-// //	this->pions.push_back(ntoken);
-// 	this->clear_all_virtual();
-// 	if (ntoken->player == 1)
-// 		this->CaptureW(ntoken);
-// 	else if (ntoken->player == 2)
-// 		this->CaptureB(ntoken);
-
-	if (player == 1)
-		State.second.setMap_char_at_XY(x, y, 'X');
-	else if (player == 2)
-		State.second.setMap_char_at_XY(x, y, 'O');
-	if (ft_check_is_catchable(State.second)){
-			// std::cout << "CATCHABLE2" << std::endl;
-			cap1 = State.second.nbTakenWhite;
-			cap2 = State.second.nbTakenBlack;
-	}
+	this->c++;
+	this->pions.push_back(ntoken);
+	this->clear_all_virtual();
+	if (ntoken->player == 1)
+		this->CaptureW(ntoken);
+	else if (ntoken->player == 2)
+		this->CaptureB(ntoken);
 	this->app->clear(sf::Color::White);
 	this->drawGrid();
 	this->drawToken();
 	this->drawScore();
 	if (isWin(ntoken))
-	{
-		// std::cout << "ENTER2" << std::endl;
-		if (ntoken->player == 1)//human
-			this->unbreakable1(ntoken);
-		if (ntoken->player == 2)//AI
-			this->unbreakable2(ntoken);
-	}
-	// if (isWin(ntoken))
-	// 	this->Winner( player );
+		this->Winner( player );
 	if ( this->c >= 360 )
 		this->DrawGame();
 	this->app->display();
 }
-
-// void			Game::add_token( t_pions * token ){
-
-// 	std::stringstream	os;
-// 	this->c++;
-// //	this->pions.push_back(token);
-// 	os << token->x << " " << token->y;
-// 	pions[os.str()] = token->player;
-// 	this->clear_all_virtual();
-// 	if (token->player == 1)
-// 		this->CaptureW(token);
-// 	else if (token->player == 2)
-// 		this->CaptureB(token);
-
-// 	this->app->clear(sf::Color::White);
-// 	this->drawGrid();
-// 	this->drawToken();
-// 	this->drawScore();
-// 	if (isWin(token))
-// 	{
-// 		if (token->player == 1)
-// 			this->unbreakable1(token);
-// 		if (token->player == 2)
-// 			this->unbreakable2(token);
-// 	}
-// 	if ( this->c >= 360 )
-// 		this->DrawGame();
-// 	this->app->display();
-// }
-
-
-
-// void			Game::add_token( int x, int y, int player ){
-
-// 	t_pions		*ntoken = new t_pions;
-// 	ntoken->x = x;
-// 	ntoken->y = y;
-// 	ntoken->player = player;
-// 	std::stringstream 	os;
-// 	this->c++;
-// 	os << x << " " << y;
-//     pions[os.str()] = player;
-// //	this->pions.push_back(ntoken);
-// 	this->clear_all_virtual();
-// 	if (ntoken->player == 1)
-// 		this->CaptureW(ntoken);
-// 	else if (ntoken->player == 2)
-// 		this->CaptureB(ntoken);
-// 	this->app->clear(sf::Color::White);
-// 	this->drawGrid();
-// 	this->drawToken();
-// 	this->drawScore();
-// 	if (isWin(ntoken))
-// 		this->Winner( player );
-// 	if ( this->c >= 360 )
-// 		this->DrawGame();
-// 	this->app->display();
-// }
 
 bool			Game::checkfreeHori(int xa, int xb, int y, int player){
 	int			c;
@@ -1710,7 +975,7 @@ bool			Game::checkfreeHori(int xa, int xb, int y, int player){
 		if (whoisHere(xa, y) == player)
 			c++;
 		else if (whoisHere(xa, y) == 0)
-			c = c + 0;
+			c = c;
 		else
 			return (false);
 		xa++;
@@ -1755,7 +1020,7 @@ bool			Game::checkfreeVer(int x, int ya, int yb, int player){
 		if (whoisHere(x, ya) == player)
 			c++;
 		else if (whoisHere(x, ya) == 0)
-			c = c + 0;
+			c = c;
 		else
 			return (false);
 		ya++;
@@ -1800,7 +1065,7 @@ bool			Game::checkfreeDiag1(int xa, int xb, int ya, int yb, int player){
 		if (whoisHere(xa, ya) == player)
 			c++;
 		else if (whoisHere(xa, ya) == 0)
-			c = c + 0;
+			c = c;
 		else
 			return (false);
 		ya++;
@@ -1855,7 +1120,7 @@ bool			Game::checkfreeDiag2(int xa, int xb, int ya, int yb, int player){
 		if (whoisHere(xa, ya) == player)
 			c++;
 		else if (whoisHere(xa, ya) == 0)
-			c = c + 0;
+			c = c;
 		else
 			return (false);
 		ya--;
@@ -1902,7 +1167,7 @@ int				Game::freeThreeDiag2( t_pions *token ){
 bool			Game::forbidden( t_pions * token ){
 	int			c;
 	sf::Text	text;
-
+	
 	this->app->clear(sf::Color::White);
 	this->drawGrid();
 	this->drawToken();
@@ -1911,9 +1176,9 @@ bool			Game::forbidden( t_pions * token ){
 
     text.setCharacterSize(40);
     if (token->player == 1)
-        text.setColor(sf::Color::White);
-    else
         text.setColor(sf::Color::Black);
+    else
+        text.setColor(sf::Color::White);
     text.setPosition(0, 0);
 	c = 0;
 	if (token->player == 1)
@@ -1939,64 +1204,35 @@ bool			Game::forbidden( t_pions * token ){
 }
 
 void		Game::clear_all( void ){
+	std::list<t_pions*>::iterator	it;
 
-	Node 			Start  = Node();
-
-	State.second.setMap(Start.getMap());
-	State.second.x = 0;
-	State.second.y = 0;
-	State.second.nbTakenWhite = 0;
-	State.second.nbTakenBlack = 0;
-	State.second.istmpwin = false;
-	// for (int i = 0; i < len; ++i){
-	// 	for (int j = 0; j < len; ++j){
-	
-	// 	}
-	// }
-
-
+	for (it = pions.begin(); it != pions.end(); it++)
+		delete *it;
 	pions.clear();
 	fake.clear();
 }
 
-// void		Game::clear_all( void ){
-// 	std::unordered_map<std::string, int>::iterator	it;
+int			Game::whoisHere( t_pions * wp ){
+	std::list<t_pions*>::iterator	it;
 
-// 	for (it = pions.begin(); it != pions.end(); it++)
-// 		{
-// 			pions.erase(it);
-// //			delete *it;
-// 		}
-// 	pions.clear();
-// 	fake.clear();
-// }
+	for (it = fake.begin(); it != fake.end(); it++)
+    {
+        t_pions     *token;
 
-int			Game::whoisHere( int x, int y ){
-	std::array<std::array<char, 19>, 19> map = State.second.getMap();
-	if ( x >= 0 && x < 19 && y >= 0 && y < 19){
-		if (map[y][x] == 'X')
-			return (1);
-		if (map[y][x] == 'O')
-			return (2);
-	}
-	return(0);
-}
-
-int			Game::whoisHere( t_pions * wp )
-{
-	std::array<std::array<char, 19>, 19> map = State.second.getMap();
-
-	if (wp->x >= 0 && wp->x < 19 && wp->y >= 0 && wp->y < 19){
-		if (map[wp->y][wp->x] == 'X')
-			return (1);
-		if (map[wp->y][wp->x] == 'O')
-			return (2);
-	}
+        token = *it;
+        if (token->x == wp->x && token->y == wp->y)
+		{
+			if (token->player > 5)
+				return (token->player - 5);
+			else
+				return (token->player);
+		}
+    }
 	return (0);
 }
 
-// int			Game::whoisHere( int x, int y ){
-/*	std::list<t_pions*>::iterator	it;
+int			Game::whoisHere( int x, int y ){
+	std::list<t_pions*>::iterator	it;
 
 	for (it = fake.begin(); it != fake.end(); it++)
 	{
@@ -2011,82 +1247,27 @@ int			Game::whoisHere( t_pions * wp )
 				return (token->player);
 		}
 	}
-*/
-// 	std::unordered_map<std::string,int>::iterator it;
-// 	std::stringstream os;
-
-//     os << x << " " << y;
-//     it = fake.find(os.str());
-//     if (it != fake.end())
-// 		{
-// 		if (it->second > 5)
-// 			return (it->second - 5);
-// 		else
-// 			return (it->second);
-// 	}
-// 	return (0);
-// }
+	return (0);
+}
 
 
 void						Game::drawToken( void ){
-	std::array<std::array<char, 19>, 19> map = State.second.getMap();
-	for (int i = 0; i < len; ++i){
-		for (int j = 0; j < len; ++j){
+	std::list<t_pions*>::iterator	it;
 
-			sf::CircleShape		shape(DIM);
-			if (map[i][j]){
-				shape.setPosition(((j * GO_CASE) + ORIGIN_X) - DIM,
-								  ((i * GO_CASE) + ORIGIN_Y) - DIM);
-				if (map[i][j] == 'X')
-					shape.setTexture(&this->blanc);
-				else
-					shape.setTexture(&this->noir);
-			
-				this->app->draw(shape);
-			}
-		}
+	for (it = pions.begin(); it != pions.end(); it++)
+	{
+		sf::CircleShape		shape(DIM);
+		t_pions				*token;
+		token = *it;
+		shape.setPosition(((token->x * GO_CASE) + ORIGIN_X) - DIM, 
+						  ((token->y * GO_CASE) + ORIGIN_Y) - DIM);
+		if (token->player == 1)
+			shape.setTexture(&this->noir);
+		else
+			shape.setTexture(&this->blanc);
+		this->app->draw(shape);
 	}
-	sf::Text 	t1;
-	sf::Text 	t2;
-
-	t1.setFont(digi);
-	t2.setFont(digi);
-	
-	t1.setCharacterSize(20);
-	t2.setCharacterSize(20);
-	t1.setString(stm1.str());
-	t2.setString(stm2.str());
-	t2.setColor(sf::Color::Black);
-	t2.setPosition(WIN_LENGTH - 70, WIN_HEIGHT - 100);
-	t1.setColor(sf::Color::White);
-	t1.setPosition(10, WIN_HEIGHT - 100);
-	app->draw(t1);
-	app->draw(t2);
 }
-
-// void						Game::drawToken( void ){
-// 	std::unordered_map<std::string,int>::iterator it;
-
-// 	for (it = pions.begin(); it != pions.end(); it++)
-// 	{
-// 		sf::CircleShape		shape(DIM);
-// 		// int					x;
-// 		// int					y;
-// 		std::vector<std::string>	elems;
-// //		t_pions				*token;
-// //		token = *it;
-// 		split(it->first, ' ', elems);
-// 		shape.setPosition((( std::stoi(elems[0]) * GO_CASE) + ORIGIN_X) - DIM,
-// 						  ((std::stoi(elems[1]) * GO_CASE) + ORIGIN_Y) - DIM);
-// 		if (it->second == 1)
-// 			shape.setTexture(&this->noir);
-// 		else
-// 			shape.setTexture(&this->blanc);
-// 		this->app->draw(shape);
-// 	}
-
-// }
-
 void						Game::drawScore( void ){
 	sf::Text			sc1;
 	sf::Text			sc2;
@@ -2107,8 +1288,8 @@ void						Game::drawScore( void ){
 
 	sc1.setCharacterSize(40);
 	sc2.setCharacterSize(40);
-	sc1.setColor(sf::Color::White);
-	sc2.setColor(sf::Color::Black);
+	sc1.setColor(sf::Color::Black);
+	sc2.setColor(sf::Color::White);
 	sc1.setPosition(10, WIN_HEIGHT - 50);
 	sc2.setPosition(WIN_LENGTH - 50, WIN_HEIGHT - 50);
 	app->draw(sc1);

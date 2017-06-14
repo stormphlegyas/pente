@@ -6,7 +6,7 @@
 //   By: mmoumini <marvin@42.fr>                    +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/06/09 17:03:53 by mmoumini          #+#    #+#             //
-//   Updated: 2016/03/16 21:06:52 by mmoumini         ###   ########.fr       //
+//   Updated: 2015/06/29 12:16:39 by mmoumini         ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -14,19 +14,14 @@
 # define _GAME_HPP_
 
 #include "Gomoku.hpp"
-#include "Node.hpp"
 class Player;
 class Game {
 
 private:
 	Timer					*time;
-/*	std::list<t_pions*>		pions;
+	std::list<t_pions*>		pions;
 	std::list<t_pions*>		fake;
 	std::list<t_pions*>		trace;
- */
- 	std::unordered_map<std::string, int> pions;
-	std::unordered_map<std::string, int> fake;
-	std::unordered_map<std::string, int> trace;
 	sf::Texture				noir;
 	sf::Texture				blanc;
 	sf::Texture				woodTex;
@@ -42,13 +37,9 @@ private:
 	sf::SoundBuffer			*buffer4;
 	sf::Font				osaka;
 	sf::Font				madeinc;
-	sf::Font 				digi;
 	Player					*p1;
 	Player					*p2;
-	std::stringstream		stm1;
-	std::stringstream		stm2;
 	bool					w;
-	bool					tmpwin;
 	int						c;
 	int						cap1;
 	int						cap2;
@@ -57,30 +48,14 @@ private:
 	t_pions					save;
 	int						advance;
 	int						tracer;
-
 public:
 
-	int 		turn;
-	int 		nwin;
-	int 		decal;
-	int 		len;
-
-	std::pair<int, Node &> 	State;
 	sf::RenderWindow        *app;
 
-	Game(  int h, Node & n );
-	// Game( Game const &src );
+	Game( void );
+	Game( Game const &src );
 	~Game( void );
 	Game & operator=( Game const &rhs );
-
-
-	int  		ft_check_is_catchable(Node & node);
-
-	void 		ft_display_map(std::array<std::array<char, 19>, 19> map);
-
-
-	bool		ft_is_finished_for(std::array<std::array<char, 19>, 19> map, char c);
-	bool 		ft_check_if_win(std::array<std::array<char, 19>, 19> const map);
 
 	void		check_event( void );
 	void		init( sf::RenderWindow *win );
@@ -105,7 +80,6 @@ public:
 	void		DrawGame( void );
 	bool		CaptureW( t_pions * ntoken );
 	bool		CaptureB( t_pions * ntoken );
-	void 		Slashme();
 	void		remove_token( int x, int y );
 	bool		forbidden( t_pions * token );
 	int			freeThreeHor( t_pions *token );

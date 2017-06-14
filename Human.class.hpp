@@ -28,7 +28,6 @@ public:
 	~Human( void );
 
 	void	make_hitBox( void );
-	void		ft_machin_learning();
 	t_pions	*put_token( Game & game );
 	Human & operator=( Human const &rhs );
 };
