@@ -29,8 +29,13 @@ Player::Player( int np ) : name("unknow"), player(np){
 Player::~Player( void ){
 }
 
+
 int			Player::GetPlayerN( void ){
 	return ( this->player );
+}
+
+std::string			Player::GetPlayerName( void ){
+	return ( this->name );
 }
 
 void		Player::ChangePlayer( void ){

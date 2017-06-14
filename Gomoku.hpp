@@ -6,7 +6,7 @@
 //   By: mmoumini <marvin@42.fr>                    +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/06/09 13:10:05 by mmoumini          #+#    #+#             //
-//   Updated: 2015/06/13 16:19:53 by mmoumini         ###   ########.fr       //
+//   Updated: 2016/05/27 16:04:45 by mmoumini         ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -33,4 +33,10 @@ typedef struct s_pions {
 #include <list>
 #include <vector>
 #include <sstream>
+#include <unordered_map>
+#include <iomanip>
+#include <random>
+#include <ctime>
+std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems);
+
 #endif

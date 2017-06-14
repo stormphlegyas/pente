@@ -24,8 +24,9 @@ public:
     void Pause( void );
     void Reinitialize( void );
 
-    float GetTime( void );
-	float GetTime_sec( void );
+    int GetTime( void );
+	int GetTime_sec( void );
+    int GetTime_milli( void );
 
 private:
     enum State {Started, Paused};
@@ -33,7 +34,8 @@ private:
 	sf::Clock myClock;
 
     State myState;
-    float myElapsedTime;
+    float myElapsedTimeMil;
+    float myElapsedTimeSec;
 };
 
 #endif

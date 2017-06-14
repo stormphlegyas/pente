@@ -6,7 +6,7 @@
 //   By: mmoumini <marvin@42.fr>                    +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/06/09 17:15:37 by mmoumini          #+#    #+#             //
-//   Updated: 2015/06/29 13:43:14 by mmoumini         ###   ########.fr       //
+//   Updated: 2016/03/17 17:29:09 by mmoumini         ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -20,7 +20,7 @@
 #define SPACE 70
 
 void			Game::removeVirtualToken( int x, int y ){
-	std::list<t_pions*>::iterator	it;
+/*	std::list<t_pions*>::iterator	it;
 
 	for (it = fake.begin(); it != fake.end(); it++)
 	{
@@ -32,7 +32,19 @@ void			Game::removeVirtualToken( int x, int y ){
 			fake.remove(*it);
 			return ;
 		}
-	}
+	}*/
+	std::unordered_map<std::string,int>::iterator it;
+	std::ostringstream os;
+
+    os << x << " " << y;
+    it = fake.find(os.str());
+    if (it != fake.end())
+    {
+		fake.erase(it);
+//          delete *it;
+		this->clear_all_virtual();
+		return ;
+    }
 }
 
 bool			Game::CaptureVirtualB( t_pions * ntoken ){
@@ -190,39 +202,51 @@ bool			Game::CaptureVirtualW( t_pions * ntoken ){
 void			Game::add_virtualtoken( t_pions * token ){
 
 	token->player = token->player + 5;
-	this->fake.push_back(token);
-	if (token->player == 1)
+//	this->fake.push_back(token);
+
+	std::stringstream   os;
+    os << token->x << " " << token->y;
+    fake[os.str()] = token->player;
+
+	if (token->player - 5 == 1)
 		this->CaptureVirtualW(token);
-	else if (token->player == 2)
+	else if (token->player - 5 == 2)
 		this->CaptureVirtualB(token);
 }
 
 void			Game::add_virtualtoken( int x, int y, int player ){
 
-	player = player + 5;
 	t_pions		*ntoken = new t_pions;
+	std::stringstream   os;
+	player = player + 5;
+
+    os << x << " " << y;
+    fake[os.str()] = player;
+
 	ntoken->x = x;
 	ntoken->y = y;
 	ntoken->player = player;
-	this->fake.push_back(ntoken);
-	if (ntoken->player == 1)
+//	this->fake.push_back(ntoken);
+	if (player - 5 == 1)
 		this->CaptureVirtualW(ntoken);
-	else if (ntoken->player == 2)
+	else if (player - 5 == 2)
 		this->CaptureVirtualB(ntoken);
 }
 
 void		Game::clear_all_virtual( void ){
 //	this->tracer = 0;
-	std::list<t_pions*>::iterator		it;
+	std::unordered_map<std::string, int>::iterator		it;
 
 	for (it = fake.begin(); it != fake.end(); it++)
 	{
-		if ((*it)->player > 5)
-			delete (*it);
+		if (it->second > 5)
+			pions.erase(it);
+//			delete (*it);
 	}
 	fake.clear();
 	for (it = pions.begin(); it != pions.end(); it++)
 	{
-		fake.push_back(*it);
+		fake[it->first] = it->second;
+//		fake.push_back(*it);
 	}
 }

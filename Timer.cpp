@@ -12,7 +12,7 @@
 
 #include "Timer.hpp"
 
-Timer::Timer( void ) : myElapsedTime(0.0f), myState(Paused)
+Timer::Timer( void ) :  myState(Paused), myElapsedTimeMil(0.0f), myElapsedTimeSec(0.0f)
 {
 }
 
@@ -30,7 +30,8 @@ void Timer::Pause( void )
 	if(myState != Paused)
 	{
 		myState = Paused;
-		myElapsedTime += myClock.getElapsedTime().asMilliseconds();
+		myElapsedTimeMil += myClock.getElapsedTime().asMilliseconds();
+		myElapsedTimeSec += myClock.getElapsedTime().asSeconds();
 	}
 }
 
@@ -38,35 +39,54 @@ void Timer::Reinitialize( void )
 {
 	myClock.restart();
 	Pause();
-	myElapsedTime = 0.0f;
+	myElapsedTimeSec = 0.0f;
+	myElapsedTimeMil = 0.0f;
+
 }
 
-float Timer::GetTime( void )
+int Timer::GetTime_milli( void )
 {
 	float time;
 
 	if(myState == Paused)
 	{
-		time = myElapsedTime;
+		time = myElapsedTimeMil;
 	}
 	else
 	{
-		time = myClock.getElapsedTime().asMilliseconds() + myElapsedTime;
+		time = myClock.getElapsedTime().asMilliseconds() + myElapsedTimeMil;
 	}
-	return time;
+	while(time >= 1000)
+		time -= 1000;
+	return time / 10;
 }
-
-float Timer::GetTime_sec( void )
+int Timer::GetTime( void )
 {
 	float time;
 
 	if(myState == Paused)
 	{
-		time = myElapsedTime;
+		time = myElapsedTimeSec;
 	}
 	else
 	{
-		time = myClock.getElapsedTime().asSeconds() + myElapsedTime;
+		time = myClock.getElapsedTime().asSeconds() + myElapsedTimeSec;
 	}
+	return time / 60;
+}
+int Timer::GetTime_sec( void )
+{
+	float time;
+
+	if(myState == Paused)
+	{
+		time = myElapsedTimeSec;
+	}
+	else
+	{
+		time = myClock.getElapsedTime().asSeconds() + myElapsedTimeSec;
+	}
+	while(time >= 60)
+		time -= 60;
 	return time;
 }

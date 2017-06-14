@@ -29,8 +29,11 @@ public:
 	Player & operator=( Player const &rhs );
 
 	void			ChangePlayer( void );
+	virtual void	ft_machin_learning( void ) = 0;
 	int				GetPlayerN( void );
+	std::string		GetPlayerName( void );
 	virtual t_pions *put_token( Game & game ) = 0;
+	bool			human;
 };
 
 #endif
