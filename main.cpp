@@ -1,14 +1,14 @@
-// ************************************************************************** //
-//                                                                            //
-//                                                        :::      ::::::::   //
-//   main.cpp                                           :+:      :+:    :+:   //
-//                                                    +:+ +:+         +:+     //
-//   By: mmoumini <marvin@42.fr>                    +#+  +:+       +#+        //
-//                                                +#+#+#+#+#+   +#+           //
-//   Created: 2015/06/09 13:11:13 by mmoumini          #+#    #+#             //
-//   Updated: 2015/06/10 18:38:35 by mmoumini         ###   ########.fr       //
-//                                                                            //
-// ************************************************************************** //
+/******************************************************************************/
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmoumini <mmoumini@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/06/09 13:11:13 by mmoumini          #+#    #+#             */
+/*   Updated: 2025/04/11 11:47:43 by mmoumini         ###   ########.fr       */
+/*                                                                            */
+/******************************************************************************/
 
 #include "Gomoku.hpp"
 #include "Game.class.hpp"
@@ -28,7 +28,8 @@ int							main( void )
 
 	// p1 = new Human("mous", 1);
 	// p2 = new Human("mous", 2);
-	app = new sf::RenderWindow( sf::VideoMode(WIN_LENGTH, WIN_HEIGHT, 32), "Gomoku42");	
+
+	app = new sf::RenderWindow( sf::VideoMode({WIN_LENGTH, WIN_HEIGHT}), "Gomoku42");	
 	game.init(app);
 	return (0);
 }
