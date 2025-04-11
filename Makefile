@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mmoumini <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: mmoumini <mmoumini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/05/12 13:41:19 by mmoumini          #+#    #+#              #
-#    Updated: 2016/06/23 00:48:28 by mmoumini         ###   ########.fr        #
+#    Updated: 2025/04/11 11:39:06 by mmoumini         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -16,19 +16,11 @@ NAME = Gomoku
 
 CC = clang++
 
-CFLAGS = -std=c++11 -O3 -march=native -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -std=c++17
 
-C_LIB = (cd lib; make)
-
-CLEAN_LIB = (cd lib; make clean)
-
-FCLEAN_LIB = (cd lib; make fclean)
-
-LIB_PATH = -L./lib -ljpeg -lfreetype -logg -lvorbis -lvorbisenc -lvorbisfile -lFLAC-static -lsfml-audio-s -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -framework OpenGL -framework AppKit -framework IOKit -framework CoreServices -framework Carbon -framework OpenAL
+LIB_PATH = -L./lib -lFLAC -lsfml-graphics -lvorbis -lfreetype -lsfml-network -lvorbisenc -logg -lsfml-system -lvorbisfile -lsfml-audio -lsfml-window -framework OpenGL -framework AppKit -framework IOKit -framework CoreServices -framework Carbon -framework OpenAL
 
 INC = -I./include
-
-
 
 SRC	=	main.cpp						\
 		tools.cpp						\
@@ -46,7 +38,6 @@ OBJ = $(SRC:.cpp=.o)
 all: $(NAME)
 
 $(NAME): $(OBJ)
-		$(C_LIB)
 		$(CC) -o $(NAME) $(OBJ) $(LIB_PATH) $(CFLAGS) $(INC)
 
 %.o: %.cpp
@@ -54,10 +45,8 @@ $(NAME): $(OBJ)
 
 clean:
 		rm -rf $(OBJ)
-		$(CLEAN_LIB)
 
 fclean: clean
-		$(FCLEAN_LIB)
 		rm -rf $(NAME)
 
 re: fclean all
