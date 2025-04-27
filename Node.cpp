@@ -79,3 +79,14 @@ std::array<std::array<char, 19>, 19>  Node::getMap() const{
 Node::~Node(){
 
 }
+
+Node::Node(Node const& src) {
+	this->_map = src._map;
+	this->Parent = src.Parent;
+	this->x = src.x;
+	this->y = src.y;
+	this->nbTakenWhite = src.nbTakenWhite;
+	this->nbTakenBlack = src.nbTakenBlack;
+	this->isSlash = src.isSlash;
+	this->istmpwin = src.istmpwin;
+}

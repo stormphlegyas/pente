@@ -1,14 +1,14 @@
-// ************************************************************************** //
-//                                                                            //
-//                                                        :::      ::::::::   //
-//   AI.class.hpp                                       :+:      :+:    :+:   //
-//                                                    +:+ +:+         +:+     //
-//   By: mmoumini <marvin@42.fr>                    +#+  +:+       +#+        //
-//                                                +#+#+#+#+#+   +#+           //
-//   Created: 2015/06/09 18:38:14 by mmoumini          #+#    #+#             //
-//   Updated: 2015/06/12 14:36:49 by mmoumini         ###   ########.fr       //
-//                                                                            //
-// ************************************************************************** //
+/******************************************************************************/
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   AI.class.hpp                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmoumini <mmoumini@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/06/09 18:38:14 by mmoumini          #+#    #+#             */
+/*   Updated: 2025/04/11 12:52:30 by mmoumini         ###   ########.fr       */
+/*                                                                            */
+/******************************************************************************/
 
 #ifndef _AI_HPP_
 # define _AI_HPP_
@@ -21,6 +21,7 @@
 #include <time.h>
 #include <future>
 #include <thread>
+#include <map>
 
 class AI : public Player {
 
@@ -70,13 +71,12 @@ public:
 	int 	ft_my_fucking_heuristic(Node & node, std::array<std::array<char, 19>, 19>, int);
 
 	Node 	ft_new_state(std::array<std::array<char, 19>, 19>, int, int);
-	std::multimap<int,Node> ft_get_child(std::pair<int, Node &>, bool);
+	std::multimap<int,Node> ft_get_child(std::pair<int, Node>, bool);
 	// void 	ft_ia();
 
-
-	int 	ft_MiniMax_A_B_Pruning(std::pair<int, Node &> , int , int , int , bool , Node *, int);
-	int  	ft_MINIMAX_AB_MAX(std::pair<int,Node&>, int, int, int, Node *, int);
-	int  	ft_MINIMAX_AB_MIN(std::pair<int,Node&>, int, int, int, Node *, int);
+	int 	ft_MiniMax_A_B_Pruning(std::pair<int, Node> , int , int , int , bool , Node *, int);
+	int  	ft_MINIMAX_AB_MAX(std::pair<int,Node>, int, int, int, Node *, int);
+	int  	ft_MINIMAX_AB_MIN(std::pair<int,Node>, int, int, int, Node *, int);
 
 	void	ft_machin_learning();
 	t_pions	*put_token( Game & game );

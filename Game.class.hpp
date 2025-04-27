@@ -1,14 +1,14 @@
-// ************************************************************************** //
-//                                                                            //
-//                                                        :::      ::::::::   //
-//   Game.class.hpp                                     :+:      :+:    :+:   //
-//                                                    +:+ +:+         +:+     //
-//   By: mmoumini <marvin@42.fr>                    +#+  +:+       +#+        //
-//                                                +#+#+#+#+#+   +#+           //
-//   Created: 2015/06/09 17:03:53 by mmoumini          #+#    #+#             //
-//   Updated: 2016/03/16 21:06:52 by mmoumini         ###   ########.fr       //
-//                                                                            //
-// ************************************************************************** //
+/******************************************************************************/
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Game.class.hpp                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmoumini <mmoumini@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/06/09 17:03:53 by mmoumini          #+#    #+#             */
+/*   Updated: 2025/04/11 12:31:43 by mmoumini         ###   ########.fr       */
+/*                                                                            */
+/******************************************************************************/
 
 #ifndef _GAME_HPP_
 # define _GAME_HPP_
@@ -32,10 +32,10 @@ private:
 	sf::Texture				woodTex;
 	sf::Texture				fond;
 	sf::Music				music[3];
-	sf::Sound				victory;
-	sf::Sound				forbi;
-	sf::Sound				captur;
-	sf::Sound				cbreaker;
+	sf::Sound				*victory;
+	sf::Sound				*forbi;
+	sf::Sound				*captur;
+	sf::Sound				*cbreaker;
 	sf::SoundBuffer			*buffer1;
 	sf::SoundBuffer			*buffer2;
 	sf::SoundBuffer			*buffer3;

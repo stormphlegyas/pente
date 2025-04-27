@@ -16,6 +16,7 @@ class Node
 
 
 		Node();
+		Node(Node const& src);
 		Node(std::array<std::array<char, 19>, 19>);
 		Node & operator=( Node const &rhs );
 		virtual ~Node();

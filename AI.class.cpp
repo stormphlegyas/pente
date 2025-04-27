@@ -1,23 +1,34 @@
-// ************************************************************************** //
-//                                                                            //
-//                                                        :::      ::::::::   //
-//   AI.class.cpp                                       :+:      :+:    :+:   //
-//                                                    +:+ +:+         +:+     //
-//   By: mmoumini <marvin@42.fr>                    +#+  +:+       +#+        //
-//                                                +#+#+#+#+#+   +#+           //
-//   Created: 2015/06/09 17:15:37 by mmoumini          #+#    #+#             //
-//   Updated: 2015/06/12 14:38:13 by mmoumini         ###   ########.fr       //
-//                                                                            //
-// ************************************************************************** //
+/******************************************************************************/
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   AI.class.cpp                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmoumini <mmoumini@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/06/09 17:15:37 by mmoumini          #+#    #+#             */
+/*   Updated: 2025/04/27 17:41:06 by mmoumini         ###   ########.fr       */
+/*                                                                            */
+/******************************************************************************/
 
 #include "AI.class.hpp"
 
 AI::AI( void ): Player("MinMax", 1){
 }
 
-AI::AI( AI const &src ){
-	*this = src;
+AI::AI(AI const &src) : Player(src) {
+	this->len = src.len;
+	this->decal = src.decal;
+	this->nwin = src.nwin;
+	this->overtime = src.overtime;
+	this->depth = src.depth;
+	this->deltamax = src.deltamax;
+	this->human = src.human;
+	this->Pos_Infinity = src.Pos_Infinity;
+	this->Neg_Infinity = src.Neg_Infinity;
+	this->winPlayer = src.winPlayer;
+	this->g = src.g;
 }
+
 
 AI::AI( int np, Game *game ) : Player("MinMax", np){
   	len = 19;
@@ -591,7 +602,7 @@ void    AI::ft_display_map(Node &node){// display 3x3 map with coordinates A to 
 
 
 
-std::multimap<int,Node> 	AI::ft_get_child(std::pair<int,Node &> node, bool MaxP)
+std::multimap<int,Node> 	AI::ft_get_child(std::pair<int,Node> node, bool MaxP)
 {
     std::multimap<int, Node> myhash;
     Node    *tmp_state = new Node();
@@ -654,7 +665,7 @@ std::multimap<int,Node> 	AI::ft_get_child(std::pair<int,Node &> node, bool MaxP)
 }
 
 
-int   						AI::ft_MINIMAX_AB_MAX(std::pair<int,Node&> root, int depth, int a, int b, Node *tmp_n, int bkp_depth){
+int   						AI::ft_MINIMAX_AB_MAX(std::pair<int,Node> root, int depth, int a, int b, Node *tmp_n, int bkp_depth){
   std::multimap<int, Node> hash_child;
   int i = 0;
 
@@ -683,7 +694,7 @@ int   						AI::ft_MINIMAX_AB_MAX(std::pair<int,Node&> root, int depth, int a, i
   return (a);
 }
 
-int   						AI::ft_MINIMAX_AB_MIN(std::pair<int,Node&> root, int depth, int a, int b, Node *tmp_n, int bkp_depth){
+int   						AI::ft_MINIMAX_AB_MIN(std::pair<int,Node> root, int depth, int a, int b, Node *tmp_n, int bkp_depth){
   std::multimap<int, Node> hash_child;
   int i = 0;
 
@@ -710,7 +721,7 @@ int   						AI::ft_MINIMAX_AB_MIN(std::pair<int,Node&> root, int depth, int a, i
   return (b);
 }
 
-int 						AI::ft_MiniMax_A_B_Pruning(std::pair<int, Node &> root, int depth, int a, int b, bool MaximizingPlayer, Node *tmp_n, int bkp_depth){
+int 						AI::ft_MiniMax_A_B_Pruning(std::pair<int, Node> root, int depth, int a, int b, bool MaximizingPlayer, Node *tmp_n, int bkp_depth){
 	// plop += 1;
 
 	if (overtime)

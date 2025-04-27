@@ -15,8 +15,9 @@
 Human::Human( void ): Player("unknow", 1), make(false){
 }
 
-Human::Human( Human const &src ){
-	*this = src;
+Human::Human(Human const &src) : Player(src) {
+	this->make = src.make;
+	this->human = src.human;
 }
 
 Human::Human( std::string n, int np ) : Player(n, np), make(false){
@@ -55,64 +56,65 @@ void		Human::make_hitBox( void ){
 	this->make = true;
 }
 
-t_pions		*Human::put_token( Game & game ){
+t_pions* Human::put_token(Game& game) {
+    t_pions* pions = new t_pions;
+    bool quit = false;
+    bool continuer = true;
+    std::list<Hit_box*>::iterator it;
+    Hit_box* tmp;
 
-	t_pions			*pions = new t_pions;
-	sf::Event		appevent;
-	sf::Keyboard	key;
-	bool			quit;
-	bool			continuer;
-	std::list<Hit_box*>::iterator	it;
-	Hit_box			*tmp;
+    pions->player = this->player;
 
-	// std::cout << "put_token" << std::endl;
-	pions->player = this->player;
-	if (!this->make)
-		this->make_hitBox();
-	continuer = true;
-	quit = false;
-	while(continuer)
-	{
-		it = box.begin();
-		game.app->pollEvent(appevent);
-		switch ( appevent.type )
-		{
-		case sf::Event::Closed :
-			continuer = false;
-			quit = true;
-			break;
-		case sf::Event::KeyPressed :
-			if (key.isKeyPressed( sf::Keyboard::Escape )){
-				continuer = false;
-				quit = true;
-			}
-		case sf::Event::MouseButtonPressed:
-			while (it != box.end())
-			{
-				tmp = *it;
-				if (tmp->isOnThebox(appevent.mouseButton.x, appevent.mouseButton.y))
-				{
-					pions->x = (tmp->x - ORIGIN_X) / GO_CASE;
-					pions->y = (tmp->y - ORIGIN_Y) / GO_CASE;
-					if (game.whoisHere(pions) == 0 && !game.forbidden(pions))
-					{
-						continuer = false;
-						break;
-					}
-				}
-				it++;
-			}
-		default:
-			break;
-		}
-	}
-	if (quit == true)
-	{
-		game.app->close();
-		exit(0);
-	}
-	return (pions);
+    if (!this->make)
+        this->make_hitBox();
+
+    while (continuer) {
+        std::optional<sf::Event> eventOpt = game.app->pollEvent();
+        if (!eventOpt.has_value())
+            continue;
+
+        const sf::Event& event = *eventOpt;
+
+        if (event.is<sf::Event::Closed>()) {
+            continuer = false;
+            quit = true;
+        }
+
+        if (event.is<sf::Event::KeyPressed>()) {
+            const auto* keyEvent = event.getIf<sf::Event::KeyPressed>();
+            if (keyEvent && keyEvent->code == sf::Keyboard::Key::Escape) {
+                continuer = false;
+                quit = true;
+            }
+        }
+
+        if (event.is<sf::Event::MouseButtonPressed>()) {
+            const auto* mouseEvent = event.getIf<sf::Event::MouseButtonPressed>();
+            if (mouseEvent) {
+                it = box.begin();
+                while (it != box.end()) {
+                    tmp = *it;
+                    if (tmp->isOnThebox(mouseEvent->position.x, mouseEvent->position.y)) {
+                        pions->x = (tmp->x - ORIGIN_X) / GO_CASE;
+                        pions->y = (tmp->y - ORIGIN_Y) / GO_CASE;
+                        if (game.whoisHere(pions) == 0 && !game.forbidden(pions)) {
+                            continuer = false;
+                            break;
+                        }
+                    }
+                    ++it;
+                }
+            }
+        }
+    }
+
+    if (quit) {
+        game.app->close();
+        exit(0);
+    }
+    return pions;
 }
+
 
 Human		& Human::operator=( Human const &rhs ) {
 	this->name = rhs.name;

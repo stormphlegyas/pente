@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   Game.class.cpp                                     :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: mmoumini <mmoumini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/09 17:15:37 by mmoumini          #+#    #+#             */
-//   Updated: 2016/03/17 17:30:33 by mmoumini         ###   ########.fr       //
+/*   Updated: 2025/04/27 17:37:05 by mmoumini         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "Game.class.hpp"
 #include "Human.class.hpp"
@@ -42,7 +42,6 @@ void		Game::quit( void ){
 
 void		Game::init( sf::RenderWindow *win ){
 
-	sf::Text		text;
 	int				choice;
 
 //	this->tracer = 0;
@@ -61,7 +60,7 @@ void		Game::init( sf::RenderWindow *win ){
 	this->buffer2 = new sf::SoundBuffer;
 	this->buffer3 = new sf::SoundBuffer;
 	this->buffer4 = new sf::SoundBuffer;
-	if (!this->digi.loadFromFile("src/DS-DIGI.TTF"))
+	if (!this->digi.openFromFile("src/DS-DIGI.TTF"))
 	std::cout << "can't load <DS-DIGI.TTF>!" << std::endl;
 	if (!this->woodTex.loadFromFile("src/bois.jpg"))
 		std::cout << "can't load <bois.jpg>!" << std::endl;
@@ -71,9 +70,9 @@ void		Game::init( sf::RenderWindow *win ){
 		std::cout << "can't load <noir.jpg>!" << std::endl;
 	if (!this->blanc.loadFromFile("src/blanc.jpg"))
 		std::cout << "can't load <blanc.jpg>!" << std::endl;
-	if (!this->osaka.loadFromFile("src/osaka-re.ttf"))
+	if (!this->osaka.openFromFile("src/osaka-re.ttf"))
 		std::cout << "can't load <osaka-re.ttf>!" << std::endl;
-	if (!this->madeinc.loadFromFile("src/MADEC.ttf"))
+	if (!this->madeinc.openFromFile("src/MADEC.ttf"))
 		std::cout << "can't load <MADEC.ttf>!" << std::endl;
 	if (!this->music[0].openFromFile("src/haomaru.ogg"))
 		std::cout << "can't load <haomaru.ogg>!" << std::endl;
@@ -87,19 +86,20 @@ void		Game::init( sf::RenderWindow *win ){
 		std::cout << "can't load <ninja.ogg>!" << std::endl;
 	if (!this->buffer4->loadFromFile("src/breaker.ogg"))
 		std::cout << "can't load <breaker.ogg>!" << std::endl;
-	this->victory.setBuffer( *this->buffer1 );
-	this->forbi.setBuffer( *this->buffer2 );
-	this->captur.setBuffer( *this->buffer3 );
-	this->cbreaker.setBuffer( *this->buffer4 );
-	this->captur.setVolume(50);
+	this->victory = new sf::Sound( *this->buffer1 );
+	this->forbi = new sf::Sound( *this->buffer2 );
+	this->captur = new sf::Sound( *this->buffer3 );
+	this->cbreaker = new sf::Sound( *this->buffer4 );
+	this->captur->setVolume(50);
 	this->music[rand() % 2].play();
-	this->music[0].setLoop(true);
-	this->music[1].setLoop(true);
-	text.setFont(this->madeinc);
+	this->music[0].setLooping(true);
+	this->music[1].setLooping(true);
+	sf::Text		text(this->madeinc);
+
 	text.setString("Gomoku42");
 	text.setCharacterSize(120);
-	text.setColor(sf::Color::Black);
-	text.setPosition(ORIGIN_X, (WIN_HEIGHT / 2) - 120);
+	text.setFillColor(sf::Color::Black);
+	text.setPosition(sf::Vector2f(ORIGIN_X, (WIN_HEIGHT / 2) - 120));
 	this->app->draw(text);
 	this->app->display();
 	this->time->Start();
@@ -197,27 +197,25 @@ void			Game::draw_choice( void ){
 
 	sf::RectangleShape				one;
 	sf::RectangleShape				two;
-	sf::Text						text1;
-	sf::Text						text2;
+	sf::Text						text1(osaka);
+	sf::Text						text2(osaka);
 
 	this->app->clear(sf::Color::White);
 
-	text1.setFont(osaka);
 	text1.setString("1 player");
 	text1.setCharacterSize(40);
-	text1.setColor(sf::Color::Black);
-	text1.setPosition(ORIGIN_X + 200, SPACE + (SQUARE_H / 3));
+	text1.setFillColor(sf::Color::Black);
+	text1.setPosition(sf::Vector2f(ORIGIN_X + 200, SPACE + (SQUARE_H / 3)));
 
-	text2.setFont(osaka);
 	text2.setString("2 players");
 	text2.setCharacterSize(40);
-	text2.setColor(sf::Color::Black);
-	text2.setPosition(ORIGIN_X + 180, ((SPACE * 2) + SQUARE_H) +  (SQUARE_H / 3));
+	text2.setFillColor(sf::Color::Black);
+	text2.setPosition(sf::Vector2f(ORIGIN_X + 180, ((SPACE * 2) + SQUARE_H) +  (SQUARE_H / 3)));
 
 	one.setSize(sf::Vector2f(SQUARE_L, SQUARE_H));
 	two.setSize(sf::Vector2f(SQUARE_L, SQUARE_H));
-	one.setPosition( ORIGIN_X, SPACE);
-	two.setPosition( ORIGIN_X, (SPACE * 2) + SQUARE_H);
+	one.setPosition(sf::Vector2f( ORIGIN_X, SPACE));
+	two.setPosition(sf::Vector2f( ORIGIN_X, (SPACE * 2) + SQUARE_H));
 	one.setOutlineThickness(2);
 	two.setOutlineThickness(2);
 	one.setFillColor(sf::Color(26, 188, 156));
@@ -232,54 +230,48 @@ void			Game::draw_choice( void ){
 	this->app->display();
 }
 
-int			Game::gameMenu( void ){
+int Game::gameMenu(void) {
+    std::optional<sf::Event> appevent;
+    bool continuer = true;
+    int choice = 0;
 
-	sf::Event       appevent;
-	sf::Keyboard    key;
-	bool            continuer;
-	int				choice;
+    this->draw_choice();
 
-	choice = 0;
-	continuer = true;
-	this->draw_choice();
-	while (continuer)
-	{
-		this->app->pollEvent(appevent);
-		switch ( appevent.type )
-		{
-		case sf::Event::Closed :
-			continuer = false;
-			break;
-		case sf::Event::KeyPressed :
-			if (key.isKeyPressed( sf::Keyboard::Escape )){
-				continuer = false;
-			}
-		case sf::Event::MouseButtonPressed:
-			if (appevent.mouseButton.x >= ORIGIN_X
-				&& appevent.mouseButton.x <= ORIGIN_X + SQUARE_L)
-			{
-				if (appevent.mouseButton.y >= SPACE
-					&& appevent.mouseButton.y <= SPACE + SQUARE_H)
-				{
-					choice = 1;
-					continuer = false;
-				}
-				if (appevent.mouseButton.y >= (SPACE * 2) + SQUARE_H
-					&& appevent.mouseButton.y <= (SPACE * 2) + (SQUARE_H * 2))
-				{
-					choice = 2;
-					continuer = false;
-				}
-			}
-		default:
-			break;
-		}
-	}
-	return (choice);
+    while (continuer) {
+        appevent = this->app->pollEvent();
+        if (!appevent.has_value())
+            continue;
+
+        if (appevent->is<sf::Event::Closed>()) {
+            continuer = false;
+        } else if (appevent->is<sf::Event::KeyPressed>()) {
+            const auto* keyEvent = appevent->getIf<sf::Event::KeyPressed>();
+            if (keyEvent->code == sf::Keyboard::Key::Escape) {
+                continuer = false;
+            }
+        } else if (appevent->is<sf::Event::MouseButtonPressed>()) {
+            const auto* mouse = appevent->getIf<sf::Event::MouseButtonPressed>();
+            if (mouse->position.x >= ORIGIN_X && mouse->position.x <= ORIGIN_X + SQUARE_L) {
+                if (mouse->position.y >= SPACE && mouse->position.y <= SPACE + SQUARE_H) {
+                    choice = 1;
+                    continuer = false;
+                }
+                if (mouse->position.y >= (SPACE * 2) + SQUARE_H &&
+                    mouse->position.y <= (SPACE * 2) + (SQUARE_H * 2)) {
+                    choice = 2;
+                    continuer = false;
+                }
+            }
+        }
+    }
+
+    return choice;
 }
 
+
+
 void			Game::Winner( int p ){
-	sf::Text			text;
+	sf::Text			text(osaka);
 	std::stringstream   stream;
 	// int					v;
 
@@ -289,13 +281,12 @@ void			Game::Winner( int p ){
 	if (this->breakstat && p != this->breakstat)
 	{
 		stream << " by break !!!" << std::endl;
-		this->cbreaker.play();
+		this->cbreaker->play();
 	}
 	else if ( this->breakstat )
 		stream << "Player "<< this->breakstat << " can't break it!!"<< std::endl;
 	this->breakstat = 0;
-	this->victory.play();
-	text.setFont(osaka);
+	this->victory->play();
 	text.setString(stream.str());
 	// std::cout << "winsalo!" << std::endl;
 
@@ -307,10 +298,10 @@ void			Game::Winner( int p ){
     this->drawScore();
 
 	if (p == 1)
-		text.setColor(sf::Color::White);
+		text.setFillColor(sf::Color::White);
 	else
-		text.setColor(sf::Color::Black);
-	text.setPosition(0, 0);
+		text.setFillColor(sf::Color::Black);
+	text.setPosition(sf::Vector2f(0, 0));
 	app->draw(text);
 	app->display();
 	clear_all();
@@ -337,45 +328,35 @@ void			Game::Winner( int p ){
 
 }
 
-void			Game::check_event( void ){
 
-	sf::Event		appevent;
-	sf::Keyboard	key;
-	bool			quit;
-
-	quit = false;
-	this->app->pollEvent(appevent);
-	switch ( appevent.type )
-	{
-	case sf::Event::Closed :
-		quit = true;
-		break;
-	case sf::Event::KeyPressed :
-		if (key.isKeyPressed( sf::Keyboard::Escape )){
-			quit = true;
-		}
-	default:
-		break;
-	}
-	if (quit == true)
-	{
-		this->app->close();
-		exit(0);
-	}
+void Game::check_event(void) {
+    if (const std::optional<sf::Event> appevent = this->app->pollEvent()) {
+        if (appevent->is<sf::Event::Closed>()) {
+            this->app->close();
+            exit(0);
+        } else if (appevent->is<sf::Event::KeyPressed>()) {
+            const auto* keyEvent = appevent->getIf<sf::Event::KeyPressed>();
+            if (keyEvent->code == sf::Keyboard::Key::Escape) {
+                this->app->close();
+                exit(0);
+            }
+        }
+    }
 }
 
+
+
 void			Game::DrawGame( void ){
-	sf::Text			text;
+	sf::Text			text(osaka);
 	std::stringstream   stream;
 
 	stream << "Draw Game!!" << std::endl;
-	this->victory.play();
-	text.setFont(osaka);
+	this->victory->play();
 	text.setString(stream.str());
 
 	text.setCharacterSize(40);
-	text.setColor(sf::Color(211, 84, 0));
-	text.setPosition(0, 0);
+	text.setFillColor(sf::Color(211, 84, 0));
+	text.setPosition(sf::Vector2f(0, 0));
 	app->draw(text);
 	app->display();
 	clear_all();
@@ -1206,9 +1187,8 @@ bool			Game::CaptureB( t_pions * ntoken ){
 	}
 	if (v != this->c)
 	{
-		sf::Text    text;
+		sf::Text    text(osaka);
 
-		text.setFont(osaka);
 		text.setString("Slash!!!");
 		text.setCharacterSize(40);
 		this->app->clear(sf::Color::White);
@@ -1216,7 +1196,7 @@ bool			Game::CaptureB( t_pions * ntoken ){
 		this->drawToken();
         this->app->draw(text);
         this->app->display();
-        this->captur.play();
+        this->captur->play();
 		sf::sleep(sf::seconds(1));
 		// std::cout << "BEFORE ME:" << std::endl;
 		// std::cout << "nbTakenBlack == " << State.second.nbTakenBlack << std::endl;
@@ -1232,10 +1212,9 @@ bool			Game::CaptureB( t_pions * ntoken ){
 }
 
 void 			Game::Slashme(){
-	sf::Text    text;
+	sf::Text    text(osaka);
 
 	this->time->Pause();
-	text.setFont(osaka);
 	text.setString("Slash!!!");
 	text.setCharacterSize(40);
 	this->app->clear(sf::Color::White);
@@ -1243,7 +1222,7 @@ void 			Game::Slashme(){
 	this->drawToken();
     this->app->draw(text);
     this->app->display();
-    this->captur.play();
+    this->captur->play();
 	sf::sleep(sf::seconds(1));
 	// this->cap2 = this->cap2 + (v - this->c);
 	cap1 = State.second.nbTakenBlack;
@@ -1333,9 +1312,8 @@ bool			Game::CaptureW( t_pions * ntoken ){
 	}
 	if (v != this->c)
 	{
-		sf::Text    text;
+		sf::Text    text(osaka);
 
-		text.setFont(osaka);
 		text.setString("Slash!!!");
 		text.setCharacterSize(40);
 		this->app->clear(sf::Color::Black);
@@ -1343,7 +1321,7 @@ bool			Game::CaptureW( t_pions * ntoken ){
 		this->drawToken();
         this->app->draw(text);
         this->app->display();
-        this->captur.play();
+        this->captur->play();
 		sf::sleep(sf::seconds(1));
 		// std::cout << "BEFOR YOU:" << std::endl;
 		// std::cout << "nbTakenBlack == " << State.second.nbTakenBlack << std::endl;
@@ -1359,12 +1337,11 @@ bool			Game::CaptureW( t_pions * ntoken ){
 }
 
 void			Game::drawBreakevent( void ){
-	sf::Text    text;
+	sf::Text    text(osaka);
 
     this->app->clear(sf::Color::White);
     this->drawGrid();
     this->drawToken();
-    text.setFont(osaka);
     text.setString("Last Stand ?!..");
     text.setCharacterSize(40);
 	this->app->draw(text);
@@ -1489,8 +1466,9 @@ void			Game::unbreakable2( t_pions * token ){
 	// 	std::cout << "CHECK" << std::endl;
 	// ft_display_map(State.second.getMap());
 	// std::cout << this->whoisHere(token->x, token->y) << std::endl;
-	if (this->whoisHere(token->x, token->y) == 0)
-		token->player = -1;
+		if (this->whoisHere(token->x, token->y) == 0){
+			token->player = -1;
+		}
 		// pions[os.str()]= this->save.player;
 		this->clear_all_virtual();
 		this->app->clear(sf::Color::White);
@@ -1901,20 +1879,19 @@ int				Game::freeThreeDiag2( t_pions *token ){
 
 bool			Game::forbidden( t_pions * token ){
 	int			c;
-	sf::Text	text;
+	sf::Text	text(osaka);
 
 	this->app->clear(sf::Color::White);
 	this->drawGrid();
 	this->drawToken();
-	text.setFont(osaka);
     text.setString("Forbidden!");
 
     text.setCharacterSize(40);
     if (token->player == 1)
-        text.setColor(sf::Color::White);
+        text.setFillColor(sf::Color::White);
     else
-        text.setColor(sf::Color::Black);
-    text.setPosition(0, 0);
+        text.setFillColor(sf::Color::Black);
+    text.setPosition(sf::Vector2f(0, 0));
 	c = 0;
 	if (token->player == 1)
 	{
@@ -1932,7 +1909,7 @@ bool			Game::forbidden( t_pions * token ){
 	{
 		this->app->draw(text);
 		this->app->display();
-		this->forbi.play();
+		this->forbi->play();
 		return (true);
 	}
 	return (false);
@@ -2035,8 +2012,8 @@ void						Game::drawToken( void ){
 
 			sf::CircleShape		shape(DIM);
 			if (map[i][j]){
-				shape.setPosition(((j * GO_CASE) + ORIGIN_X) - DIM,
-								  ((i * GO_CASE) + ORIGIN_Y) - DIM);
+				shape.setPosition(sf::Vector2f(((j * GO_CASE) + ORIGIN_X) - DIM,
+								  ((i * GO_CASE) + ORIGIN_Y) - DIM));
 				if (map[i][j] == 'X')
 					shape.setTexture(&this->blanc);
 				else
@@ -2046,20 +2023,17 @@ void						Game::drawToken( void ){
 			}
 		}
 	}
-	sf::Text 	t1;
-	sf::Text 	t2;
-
-	t1.setFont(digi);
-	t2.setFont(digi);
+	sf::Text 	t1(digi);
+	sf::Text 	t2(digi);
 	
 	t1.setCharacterSize(20);
 	t2.setCharacterSize(20);
 	t1.setString(stm1.str());
 	t2.setString(stm2.str());
-	t2.setColor(sf::Color::Black);
-	t2.setPosition(WIN_LENGTH - 70, WIN_HEIGHT - 100);
-	t1.setColor(sf::Color::White);
-	t1.setPosition(10, WIN_HEIGHT - 100);
+	t2.setFillColor(sf::Color::Black);
+	t2.setPosition(sf::Vector2f(WIN_LENGTH - 70, WIN_HEIGHT - 100));
+	t1.setFillColor(sf::Color::White);
+	t1.setPosition(sf::Vector2f(10, WIN_HEIGHT - 100));
 	app->draw(t1);
 	app->draw(t2);
 }
@@ -2088,14 +2062,11 @@ void						Game::drawToken( void ){
 // }
 
 void						Game::drawScore( void ){
-	sf::Text			sc1;
-	sf::Text			sc2;
+	sf::Text			sc1(osaka);
+	sf::Text			sc2(osaka);
 	std::stringstream   stream1;
 	std::stringstream   stream2;
 
-
-	sc1.setFont(osaka);
-	sc2.setFont(osaka);
 	stream1 << this->cap1;
 	if (this->cap1 == 5)
 		stream1 << " !!!";
@@ -2107,10 +2078,10 @@ void						Game::drawScore( void ){
 
 	sc1.setCharacterSize(40);
 	sc2.setCharacterSize(40);
-	sc1.setColor(sf::Color::White);
-	sc2.setColor(sf::Color::Black);
-	sc1.setPosition(10, WIN_HEIGHT - 50);
-	sc2.setPosition(WIN_LENGTH - 50, WIN_HEIGHT - 50);
+	sc1.setFillColor(sf::Color::White);
+	sc2.setFillColor(sf::Color::Black);
+	sc1.setPosition(sf::Vector2f(10, WIN_HEIGHT - 50));
+	sc2.setPosition(sf::Vector2f(WIN_LENGTH - 50, WIN_HEIGHT - 50));
 	app->draw(sc1);
 	app->draw(sc2);
 }
@@ -2124,10 +2095,10 @@ void						Game::drawGrid( void )
 	x = ORIGIN_X;
 	y = ORIGIN_Y;
 	decor.setTexture(&fond);
-	decor.setPosition(0, 0);
+	decor.setPosition(sf::Vector2f(0, 0));
 	decor.setSize(sf::Vector2f(WIN_LENGTH, WIN_HEIGHT));
 	plateau.setTexture(&woodTex);
-	plateau.setPosition(ORIGIN_X - (GO_CASE / 2), ORIGIN_Y - (GO_CASE / 2));
+	plateau.setPosition(sf::Vector2f(ORIGIN_X - (GO_CASE / 2), ORIGIN_Y - (GO_CASE / 2)));
 	plateau.setSize(sf::Vector2f(GO_CASE * 19, GO_CASE * 19));
 	this->app->draw(decor);
 	this->app->draw(plateau);
@@ -2136,7 +2107,7 @@ void						Game::drawGrid( void )
 		sf::RectangleShape      grille;
 
 		grille.setSize(sf::Vector2f(GO_CASE - 1, GO_CASE - 1));
-		grille.setPosition(x, y);
+		grille.setPosition(sf::Vector2f(x, y));
 		grille.setFillColor(sf::Color::Transparent);
 		grille.setOutlineThickness(2);
 		grille.setOutlineColor(sf::Color(0, 0, 0));
@@ -2151,7 +2122,7 @@ void						Game::drawGrid( void )
 	sf::RectangleShape      carre;
 
 	carre.setSize(sf::Vector2f(9, 9));
-	carre.setPosition((ORIGIN_X + (9 * GO_CASE)) - 5, (ORIGIN_Y + (9 * GO_CASE)) - 5);
+	carre.setPosition(sf::Vector2f((ORIGIN_X + (9 * GO_CASE)) - 5, (ORIGIN_Y + (9 * GO_CASE)) - 5));
 	carre.setFillColor(sf::Color(0, 0, 0));
 	this->app->draw(carre);
 }

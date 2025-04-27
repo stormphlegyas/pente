@@ -3,32 +3,38 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mmoumini <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: mmoumini <mmoumini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/05/12 13:41:19 by mmoumini          #+#    #+#              #
-#    Updated: 2016/06/23 00:48:28 by mmoumini         ###   ########.fr        #
+#    Updated: 2025/04/27 17:46:43 by mmoumini         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
 .PHONY = all, clean, fclean, re
 
-NAME = Gomoku
+ifeq ($(OS),Windows_NT)
+    NAME = Gomoku.exe
+	CC	 = g++
+    LIB_PATH = -L./lib/windows \
+        -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio \
+        -lopengl32 -lwinmm -lgdi32
+else
+    NAME = Gomoku
+	CC	 = clang++
+    LIB_PATH = -L./lib/macos -lFLAC 						\
+		-lsfml-graphics -lvorbis 					\
+		-lfreetype -lsfml-network 					\
+		-lvorbisenc -logg -lsfml-system 			\
+		-lvorbisfile -lsfml-audio -lsfml-window 	\
+		-framework OpenGL -framework AppKit 		\
+		-framework IOKit -framework CoreServices 	\
+		-framework Carbon -framework OpenAL
 
-CC = clang++
+endif
 
-CFLAGS = -std=c++11 -O3 -march=native -Wall -Wextra -Werror
-
-C_LIB = (cd lib; make)
-
-CLEAN_LIB = (cd lib; make clean)
-
-FCLEAN_LIB = (cd lib; make fclean)
-
-LIB_PATH = -L./lib -ljpeg -lfreetype -logg -lvorbis -lvorbisenc -lvorbisfile -lFLAC-static -lsfml-audio-s -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -framework OpenGL -framework AppKit -framework IOKit -framework CoreServices -framework Carbon -framework OpenAL
+CFLAGS = -Wall -Wextra -Werror -std=c++17
 
 INC = -I./include
-
-
 
 SRC	=	main.cpp						\
 		tools.cpp						\
@@ -46,7 +52,6 @@ OBJ = $(SRC:.cpp=.o)
 all: $(NAME)
 
 $(NAME): $(OBJ)
-		$(C_LIB)
 		$(CC) -o $(NAME) $(OBJ) $(LIB_PATH) $(CFLAGS) $(INC)
 
 %.o: %.cpp
@@ -54,10 +59,8 @@ $(NAME): $(OBJ)
 
 clean:
 		rm -rf $(OBJ)
-		$(CLEAN_LIB)
 
 fclean: clean
-		$(FCLEAN_LIB)
 		rm -rf $(NAME)
 
 re: fclean all
